@@ -1,0 +1,36 @@
+{
+  "root": true,
+  "extends": [
+    "plugin:vue/vue3-essential",
+    "plugin:vuetify/base",
+    "eslint:recommended",
+    "@vue/eslint-config-typescript",
+    "@vue/eslint-config-prettier/skip-formatting",
+    "plugin:prettier/recommended",
+    "plugin:import/recommended",
+    "plugin:import/typescript"
+  ],
+  "plugins": ["import"],
+  "parserOptions": { "ecmaVersion": "latest" },
+  "rules": {
+    "@typescript-eslint/interface-name-prefix": "off",
+    "@typescript-eslint/explicit-function-return-type": "off",
+    "@typescript-eslint/explicit-module-boundary-types": "off",
+    "@typescript-eslint/no-explicit-any": "off",
+    "@typescript-eslint/no-unused-vars": [
+      "warn", // or "error"
+      {
+        "argsIgnorePattern": "^_",
+        "varsIgnorePattern": "^_",
+        "caughtErrorsIgnorePattern": "^_"
+      }
+    ],
+    "import/no-named-as-default": "off",
+    "sort-imports": ["error", { "ignoreCase": true, "ignoreDeclarationSort": true }],
+    "import/order": [
+      "error",
+      { "groups": ["builtin", "external", "internal", ["sibling", "parent"], "index", "unknown"], "newlines-between": "always", "alphabetize": { "order": "asc", "caseInsensitive": true } }
+    ]
+  },
+  "settings": { "import/parsers": { "@typescript-eslint/parser": [".ts", ".tsx"] }, "import/resolver": { "typescript": { "alwaysTryTypes": true, "project": "./tsconfig.app.json" } } }
+}

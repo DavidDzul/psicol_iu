@@ -1,0 +1,745 @@
+# This file was generated. Do not edit manually.
+
+schema {
+    query: Query
+    mutation: Mutation
+}
+
+type Admin {
+    active: Boolean!
+    createdAt: String!
+    email: String!
+    firstName: String!
+    id: Int!
+    lastName: String!
+    phone: String
+    plan: AdminPlan
+    planId: Float
+    root: Boolean!
+    terrainsCount: Int!
+    updatedAt: String!
+    user: User
+    users: [User!]!
+    usersCount: Int!
+}
+
+type AdminPermission {
+    id: Int!
+    key: String!
+    name: String!
+    planMap: [AdminPlanPermissionMap!]!
+}
+
+type AdminPlan {
+    admins: [Admin!]!
+    defaultPlan: Boolean!
+    id: Int!
+    name: String!
+    numUsers: Int!
+    permissionMap: [AdminPlanPermissionMap!]!
+    price: Float!
+    users: [Admin!]!
+}
+
+type AdminPlanPermissionMap {
+    createdAt: String!
+    id: Int!
+    permission: AdminPermission!
+    permissionId: Int!
+    plan: AdminPlan!
+    planId: Int!
+    updatedAt: String!
+}
+
+type Attribute {
+    createdAt: String!
+    description: String
+    format: AttributeFormatEnum
+    id: Int!
+    name: String!
+    required: Boolean!
+    sheetAttributeMap: [SheetAttributeMap!]
+    type: AttributeTypeEnum
+    updatedAt: String!
+    userAttributeMap: [UserAttributeMap!]
+}
+
+type Image {
+    createdAt: String!
+    date: String!
+    east: Float!
+    id: Int!
+    kmzUrl: String
+    north: Float!
+    report: String
+    south: Float!
+    status: ImageStatusEnum!
+    terrainId: Int!
+    updatedAt: String!
+    url: String!
+    west: Float!
+}
+
+type ImageFiles {
+    kmzUrl: String
+    url: String!
+}
+
+type Label {
+    createdAt: String!
+    download: Boolean!
+    editor: Boolean!
+    id: Int!
+    name: String!
+    updatedAt: String!
+    user: User!
+    userId: Int!
+    usersMap: [UserLabelMap!]!
+}
+
+type Mutation {
+    createAdmin(createAdminInput: CreateAdminInput!): Admin!
+    createAdminPlan(createAdminPlanInput: CreateAdminPlanInput!): AdminPlan!
+    createAttribute(createAttributeInput: CreateAttributeInput!): Attribute!
+    createImage(createImageInput: CreateImageInput!): Image!
+    createPhoto(photo: Upload!, terrainId: Int!): Photo!
+    createPlan(createPlanInput: CreatePlanInput!): Plan!
+    createSheetAttributeMap(createSheetAttributeMapInput: CreateSheetAttributeMapInput!): SheetAttributeMap!
+    createSheetAttributeMapByIntegration(createSheetAttributeMapInputArray: [CreateSheetAttributeMapInput!]!, id: Int!): [SheetAttributeMap!]!
+    createSheetIntegration(createSheetIntegrationInput: CreateSheetIntegrationInput!): SheetIntegration!
+    createSheetTagMap(createSheetTagMapInput: CreateSheetTagMapInput!): SheetTagMap!
+    createSheetTagMapByIntegration(createSheetTagMapInputArray: [CreateSheetTagMapInput!]!, id: Int!): [SheetTagMap!]!
+    createTag(createTagInput: CreateTagInput!): Tag!
+    createTerrain(createTerrainInput: CreateTerrainInput!): Terrain!
+    createTerrainAttributeMapByTerrain(createTerrainAttributeMapInputArray: [CreateTerrainAttributeMapInput!]!, id: Int!): [TerrainAttributeMap!]!
+    createTerrainTagMapByTag(createTerrainTagMapInputArray: [CreateTerrainTagMapInput!]!, id: Int!): [TerrainTagMap!]!
+    createTerrainTagMapByTerrain(createTerrainTagMapInputArray: [CreateTerrainTagMapInput!]!, id: Int!): [TerrainTagMap!]!
+    createTerrainUserMapByTerrain(createTerrainUserMapInputArray: [CreateTerrainUserMapInput!]!, id: Int!): [TerrainUserMap!]!
+    createUser(createUserInput: CreateUserInput!): User!
+    generateReport(id: Int!, terrainIds: [Int!]!): [Terrain!]!
+    login(email: String!, password: String!): Token!
+    refreshSheet(integrationId: Int!, updateKmz: Boolean): SuccessMessage!
+    refreshUserPrivileges(id: Int!): SuccessMessage!
+    register(registerAdminInput: RegisterAdminInput!): SuccessMessage!
+    removeAdmin(id: Int!): SuccessMessage!
+    removeAdminPlan(id: Int!): SuccessMessage!
+    removeAttribute(id: Int!): SuccessMessage!
+    removeImage(id: Int!): SuccessMessage!
+    removePhoto(driveId: String, id: Int, terrainId: Int!): SuccessMessage!
+    removePlan(id: Int!): SuccessMessage!
+    removeRecord(id: String!, terrainId: Int!): SuccessMessage!
+    removeSheetAttributeMap(id: Int!): SuccessMessage!
+    removeSheetIntegration(clearTerrain: Boolean!, id: Int!): SuccessMessage!
+    removeSheetTagMap(id: Int!): SuccessMessage!
+    removeTag(id: Int!): SuccessMessage!
+    removeTerrain(id: Int!): SuccessMessage!
+    removeTerrainTagMap(id: Int!): SuccessMessage!
+    removeTerrainUserMap(id: Int!): SuccessMessage!
+    removeUser(id: Int!): SuccessMessage!
+    updateAdmin(updateAdminInput: UpdateAdminInput!): Admin!
+    updateAdminPlan(updateAdminPlanInput: UpdateAdminPlanInput!): AdminPlan!
+    updateAttribute(updateAttributeInput: UpdateAttributeInput!): Attribute!
+    updatePlan(updatePlanInput: UpdatePlanInput!): Plan!
+    updateProfile(updateProfileInput: UpdateProfileInput!): Admin!
+    updateSheetAttributeMap(updateSheetAttributeMapInput: UpdateSheetAttributeMapInput!): SheetAttributeMap!
+    updateSheetIntegration(updateSheetIntegrationInput: UpdateSheetIntegrationInput!): SheetIntegration!
+    updateSheetTagMap(updateSheetTagMapInput: UpdateSheetTagMapInput!): SheetTagMap!
+    updateTag(updateTagInput: UpdateTagInput!): Tag!
+    updateTerrain(updateTerrainInput: UpdateTerrainInput!): Terrain!
+    updateTerrainUserMap(updateTerrainUserMapInput: UpdateTerrainUserMapInput!): TerrainUserMap!
+    updateUser(updateUserInput: UpdateUserInput!): User!
+    uploadImageFiles(date: String!, image: Upload!, kmz: Upload!, terrainId: Int!): ImageFiles!
+    uploadLogo(logo: Upload, userId: Int!): User!
+    uploadRecordFile(parentId: String, recordFile: Upload!, terrainId: Int!): Record!
+    uploadRecordFolder(name: String!, parentId: String, terrainId: Int!): Record!
+}
+
+type Permission {
+    id: Int!
+    key: String!
+    name: String!
+    planMap: [PlanPermissionMap!]!
+}
+
+type Photo {
+    createdAt: String!
+    id: Int!
+    terrainId: Int!
+    type: FileSourceEnum!
+    url: String!
+}
+
+type Plan {
+    id: Int!
+    monitoringCost: Float!
+    name: String!
+    numMonitoring: Int!
+    numTerrains: Int!
+    numVerifiedTerrains: Int!
+    permissionMap: [PlanPermissionMap!]!
+    price: Float!
+    storage: Float!
+    users: [User!]!
+    verificationCost: Float!
+}
+
+type PlanPermissionMap {
+    createdAt: String!
+    id: Int!
+    permission: Permission!
+    permissionId: Int!
+    plan: Plan!
+    planId: Int!
+    updatedAt: String!
+}
+
+type Query {
+    IntegrationSheets: [SheetIntegration!]!
+    admin(id: Int!): Admin!
+    adminPermission(id: Int!): AdminPermission!
+    adminPermissions: [AdminPermission!]!
+    adminPlan(id: Int!): AdminPlan!
+    adminPlans: [AdminPlan!]!
+    admins: [Admin!]!
+    attribute(id: Int!): Attribute!
+    attributes: [Attribute!]!
+    findTagByUser(id: Int!): [Tag!]!
+    permission(id: Int!): Permission!
+    permissions: [Permission!]!
+    plan(id: Int!): Plan!
+    plans: [Plan!]!
+    profile: Admin!
+    tags: [Tag!]!
+    terrain(id: Int!): Terrain!
+    terrains: [Terrain!]!
+    user(id: Int!): User!
+    users: [User!]!
+    usersMap(id: Int!): [TerrainAttributeMap!]!
+}
+
+type Record {
+    children: [Record!]
+    createdAt: String!
+    fileId: String!
+    mimeType: String
+    name: String!
+    parent: Record
+    parentFileId: String
+    source: FileSourceEnum!
+    terrain: Terrain!
+    terrainId: Int!
+    type: FileTypeEnum!
+}
+
+type SheetAttributeMap {
+    attribute: Attribute!
+    attributeId: Int!
+    column: String!
+    createdAt: String!
+    id: Int!
+    integration: [SheetIntegration!]!
+    integrationId: Int!
+    updatedAt: String!
+}
+
+type SheetIntegration {
+    attribute: [SheetAttributeMap!]!
+    colorColumn: String
+    createdAt: String!
+    driveUrl: String!
+    id: Int!
+    identifierColumn: String!
+    kmzColumn: String!
+    nameColumn: String!
+    sheetAttributes: [SheetAttributeMap!]
+    sheetName: String!
+    sheetTags: [SheetTagMap!]!
+    storageUrlColumn: String!
+    tag: [SheetTagMap!]!
+    updatedAt: String!
+    user: User!
+    userId: Int!
+}
+
+type SheetTagMap {
+    column: String!
+    createdAt: String!
+    id: Int!
+    integration: [SheetIntegration!]!
+    integrationId: Int!
+    updatedAt: String!
+}
+
+type SuccessMessage {
+    message: String!
+}
+
+type Tag {
+    createdAt: String!
+    id: Int!
+    name: String!
+    terrainsMap: [TerrainTagMap!]!
+    updatedAt: String!
+    user: User!
+    userId: Int!
+}
+
+type Terrain {
+    active: Boolean!
+    attributesMap: [TerrainAttributeMap!]!
+    color: String
+    createdAt: String!
+    description: String
+    dimensions: Float
+    documentVerified: Boolean
+    filesFolder: String
+    geometry: JSON
+    id: Int!
+    identifier: String
+    images: [Image!]!
+    imagesFolder: String
+    inMarketplace: Boolean
+    lastImage: Image
+    mapsUrl: String
+    name: String!
+    owner: User!
+    ownerId: Int!
+    photos: [Photo!]!
+    photosFolder: String
+    records: [Record!]!
+    rootFolder: String
+    storageUrl: String
+    tagsMap: [TerrainTagMap!]!
+    terrainMarketplace: TerrainMarketplace
+    terrainSold: TerrainSold
+    updatedAt: String!
+    usersMap: [TerrainUserMap!]!
+    verified: Boolean!
+}
+
+type TerrainAttributeMap {
+    attribute: Attribute!
+    attributeId: Int!
+    boolean: Boolean
+    createdAt: String!
+    id: Int!
+    numeric: Float
+    string: String
+    terrain: Terrain!
+    terrainId: Int!
+    updatedAt: String!
+}
+
+type TerrainMarketplace {
+    createdAt: String!
+    detail: String
+    id: Int!
+    offer: TerrainStatusEnum!
+    squareMeterPrice: Float!
+    terrain: Terrain!
+    terrainId: Int!
+    totalPrice: Float!
+    typeProperty: TypePropertyEnum!
+    updatedAt: String!
+    userEmail: String!
+    userName: String!
+    userPhone: String!
+}
+
+type TerrainSold {
+    createdAt: String!
+    id: Int!
+    price: Float!
+    seller: User!
+    sellerId: Int!
+    terrain: Terrain!
+    terrainId: Int!
+    updatedAt: String!
+}
+
+type TerrainTagMap {
+    createdAt: String!
+    id: Int!
+    tag: Tag!
+    tagId: Int!
+    terrain: Terrain!
+    terrainId: Int!
+    updatedAt: String!
+}
+
+type TerrainUserMap {
+    auto: Boolean!
+    createdAt: String!
+    download: Boolean!
+    editor: Boolean!
+    id: Int!
+    terrain: Terrain!
+    terrainId: Int!
+    updatedAt: String!
+    user: User!
+    userId: Int!
+}
+
+type Token {
+    token: String!
+}
+
+type User {
+    active: Boolean!
+    admin: Admin
+    adminId: Float
+    autoLabels: Boolean!
+    createdAt: String!
+    email: String!
+    firstName: String!
+    folder: String
+    id: Int!
+    labels: [Label!]!
+    labelsMap: [UserLabelMap!]!
+    lastName: String!
+    logoUrl: String
+    master: User
+    masterId: Int
+    phone: String
+    plan: Plan
+    planId: Float
+    pvtAttributes: Boolean!
+    role: RoleEnum
+    sheetIntegration: SheetIntegration
+    subUsers: [User!]
+    tags: [Tag!]!
+    terrains: [Terrain!]!
+    terrainsCount: Int!
+    terrainsMap: [TerrainUserMap!]!
+    updatedAt: String!
+    userAttributeMap: [UserAttributeMap!]
+    userIntegration: SheetIntegration
+    userSeller: TerrainSold
+}
+
+type UserAttributeMap {
+    attribute: Attribute!
+    attributeId: Int!
+    createdAt: String!
+    id: Int!
+    public: Boolean!
+    updatedAt: String!
+    user: User!
+    userId: Int!
+}
+
+type UserLabelMap {
+    createdAt: String!
+    id: Int!
+    label: Label!
+    labelId: Int!
+    updatedAt: String!
+    user: User!
+    userId: Int!
+}
+
+enum AttributeFormatEnum {
+    AREA
+    PRICE
+    STRING
+    URL
+}
+
+enum AttributeTypeEnum {
+    BOOLEAN
+    NUMERIC
+    STRING
+}
+
+enum FileSourceEnum {
+    AWS
+    DRIVE
+}
+
+enum FileTypeEnum {
+    DIR
+    FILE
+}
+
+enum ImageStatusEnum {
+    ALERT
+    OK
+    UNKNOWN
+    WARNING
+}
+
+enum RoleEnum {
+    BASIC_USER
+    DEMO_USER
+    FREE_USER
+    PACK100_USER
+    PACK15_USER
+    PACK200_USER
+    PACK300_USER
+    PACK30_USER
+    PACK50_USER
+    SUB_USER
+}
+
+enum TerrainStatusEnum {
+    RENT
+    SALE
+}
+
+enum TypePropertyEnum {
+    COMMERCIAL
+    HOME
+    INDUSTRIAL
+    TERRAIN
+}
+
+"The `JSON` scalar type represents JSON values as specified by [ECMA-404](http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf)."
+scalar JSON
+
+"The `Upload` scalar type represents a file upload."
+scalar Upload
+
+input CreateAdminInput {
+    email: String!
+    firstName: String!
+    lastName: String!
+    password: String!
+    phone: String
+    planId: Int
+    root: Boolean = false
+}
+
+input CreateAdminPlanInput {
+    name: String!
+    numUsers: Float!
+    permissions: [Int!]!
+    price: Float!
+}
+
+input CreateAttributeInput {
+    description: String
+    format: AttributeFormatEnum!
+    name: String!
+    required: Boolean!
+    type: AttributeTypeEnum!
+}
+
+input CreateImageInput {
+    date: String!
+    east: Float!
+    kmzUrl: String
+    north: Float!
+    report: String
+    south: Float!
+    status: ImageStatusEnum!
+    terrainId: Int!
+    url: String!
+    west: Float!
+}
+
+input CreatePlanInput {
+    monitoringCost: Float!
+    name: String!
+    numMonitoring: Int!
+    numTerrains: Int!
+    numVerifiedTerrains: Int!
+    permissions: [Int!]!
+    price: Float!
+    storage: Float!
+    verificationCost: Float!
+}
+
+input CreateSheetAttributeMapInput {
+    attributeId: Int!
+    column: String!
+    integrationId: Int
+}
+
+input CreateSheetIntegrationInput {
+    colorColumn: String
+    driveUrl: String!
+    identifierColumn: String!
+    kmzColumn: String!
+    nameColumn: String!
+    sheetName: String!
+    storageUrlColumn: String!
+    userId: Int!
+}
+
+input CreateSheetTagMapInput {
+    column: String!
+    integrationId: Int
+}
+
+input CreateTagInput {
+    name: String!
+    userId: Int!
+}
+
+input CreateTerrainAttributeMapInput {
+    attributeId: Int
+    boolean: Boolean
+    numeric: Float
+    string: String
+    terrainId: Int
+}
+
+input CreateTerrainInput {
+    active: Boolean
+    description: String
+    dimensions: Float
+    documentVerified: Boolean
+    geometry: JSON
+    identifier: String
+    mapsUrl: String
+    name: String!
+    ownerId: Int!
+    storageUrl: String
+    verified: Boolean
+}
+
+input CreateTerrainTagMapInput {
+    tagId: Int
+    terrainId: Int
+}
+
+input CreateTerrainUserMapInput {
+    download: Boolean!
+    editor: Boolean!
+    terrainId: Int
+    userId: Int
+}
+
+input CreateUserInput {
+    email: String!
+    firstName: String!
+    lastName: String!
+    password: String!
+    phone: String
+    planId: Int
+}
+
+input RegisterAdminInput {
+    email: String!
+    firstName: String!
+    lastName: String!
+    password: String!
+    phone: String
+}
+
+input UpdateAdminInput {
+    active: Boolean
+    firstName: String
+    id: Int!
+    lastName: String
+    password: String
+    phone: String
+    planId: Int
+    root: Boolean = false
+}
+
+input UpdateAdminPlanInput {
+    id: Int!
+    name: String
+    numUsers: Float
+    permissions: [Int!]
+    price: Float
+}
+
+input UpdateAttributeInput {
+    description: String
+    format: AttributeFormatEnum
+    id: Int!
+    name: String
+    required: Boolean
+}
+
+input UpdatePlanInput {
+    id: Int!
+    monitoringCost: Float
+    name: String
+    numMonitoring: Int
+    numTerrains: Int
+    numVerifiedTerrains: Int
+    permissions: [Int!]
+    price: Float
+    storage: Float
+    verificationCost: Float
+}
+
+input UpdateProfileInput {
+    firstName: String
+    lastName: String
+    password: String
+    phone: String
+    planId: Int
+    root: Boolean = false
+}
+
+input UpdateSheetAttributeMapInput {
+    attributeId: Int
+    column: String
+    id: Int
+    integrationId: Int
+}
+
+input UpdateSheetIntegrationInput {
+    colorColumn: String
+    driveUrl: String
+    id: Int!
+    identifierColumn: String
+    kmzColumn: String
+    nameColumn: String
+    sheetName: String
+    storageUrlColumn: String
+    userId: Int
+}
+
+input UpdateSheetTagMapInput {
+    column: String
+    id: Int!
+    integrationId: Int
+}
+
+input UpdateTagInput {
+    id: Int!
+    name: String
+    userId: Int
+}
+
+input UpdateTerrainInput {
+    active: Boolean
+    description: String
+    dimensions: Float
+    documentVerified: Boolean
+    filesFolder: String
+    geometry: JSON
+    id: Int!
+    identifier: String
+    imagesFolder: String
+    mapsUrl: String
+    name: String
+    ownerId: Int
+    photosFolder: String
+    rootFolder: String
+    storageUrl: String
+    verified: Boolean
+}
+
+input UpdateTerrainUserMapInput {
+    download: Boolean
+    editor: Boolean
+    id: Int!
+}
+
+input UpdateUserInput {
+    active: Boolean
+    firstName: String
+    folder: String
+    id: Int!
+    lastName: String
+    logoUrl: String
+    password: String
+    phone: String
+    planId: Int
+}

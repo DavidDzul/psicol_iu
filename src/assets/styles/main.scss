@@ -1,0 +1,12 @@
+html {
+  overflow-y: auto;
+}
+.v-navigation-drawer {
+  will-change: initial;
+}
+tr:hover:not(.v-data-table__expanded__content):not(.v-data-table__empty-wrapper) {
+  cursor: pointer;
+}
+.v-window-item{
+  height: 100%!important;
+}
