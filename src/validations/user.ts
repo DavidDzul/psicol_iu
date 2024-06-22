@@ -1,5 +1,7 @@
 import * as yup from "yup"
 
+import { CampusEnum } from "@/grapqhl"
+
 import { optionalString } from "./shared"
 
 export const firstName = () => yup.string().required().label("Nombre")
@@ -7,6 +9,7 @@ export const lastName = () => yup.string().concat(optionalString).min(3).label("
 
 export const email = () => yup.string().email().required().label("Email")
 export const password = () => yup.string().required().min(6).label("Contraseña")
+export const enrollment = () => yup.string().required().min(9).max(9).label("Matrícula")
 export const updatePassword = () => yup.string().concat(optionalString).min(6).label("Contraseña")
 export const confirmation = () =>
   yup
@@ -19,9 +22,4 @@ export const confirmation = () =>
     .oneOf([yup.ref("password")], "Las contraseñas deben coincidir")
     .label("Confirmar Contraseña")
 export const phone = () => yup.string().concat(optionalString).length(13, "").label("Teléfono")
-export const planId = () =>
-  yup
-    .number()
-    .nullable()
-    .transform((curr, orig) => (!orig ? undefined : curr))
-    .label("Plan")
+export const campus = () => yup.mixed<CampusEnum>().oneOf(Object.values(CampusEnum)).required().label("Sede")

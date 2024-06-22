@@ -7,6 +7,8 @@ export const GET_PROFILE = gql`
       firstName
       lastName
       email
+      role
+      campus
     }
   }
 `

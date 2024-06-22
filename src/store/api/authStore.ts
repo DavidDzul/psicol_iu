@@ -4,14 +4,17 @@ import { defineStore, getActivePinia } from "pinia"
 import { computed, ref } from "vue"
 import { RouteLocationNormalized, useRouter } from "vue-router"
 
-import { Admin, ADMIN_LOGIN, GET_PROFILE, Mutation, Query } from "@/grapqhl"
+import { Admin, ADMIN_LOGIN, CampusEnum, GET_PROFILE, Mutation, Query } from "@/grapqhl"
 import { useAlertStore } from "@/store/alertStore"
+
+import { CampusOption } from "../../../constants"
 
 export const useAuthStore = defineStore("authStore", () => {
   const { push } = useRouter()
   const { client } = useApolloClient()
   const { showAlert } = useAlertStore()
   const userProfile = ref<Admin>()
+  const adminCampus = ref<CampusOption[]>()
 
   const {
     loading: loadingLogin,
@@ -89,6 +92,7 @@ export const useAuthStore = defineStore("authStore", () => {
   onResult((param) => {
     if (param.data?.profile) {
       userProfile.value = param.data.profile
+      adminCampus.value = validateCampus(userProfile.value.campus)
     }
   })
 
@@ -97,6 +101,26 @@ export const useAuthStore = defineStore("authStore", () => {
   const userInitials = computed<string>(() => `${profileResult?.value?.profile.firstName.charAt(0) || ""}${profileResult?.value?.profile.lastName.charAt(0) || ""}`)
 
   const fullName = computed<string>(() => `${profileResult?.value?.profile.firstName || ""} ${profileResult?.value?.profile.lastName || ""}`)
+
+  const validateCampus = (value: CampusEnum) => {
+    switch (value) {
+      case CampusEnum.Merida:
+        return [
+          { value: CampusEnum.Merida, text: "Mérida" },
+          { value: CampusEnum.Valladolid, text: "Valladolid" },
+          { value: CampusEnum.Tizimin, text: "Tizimín" },
+          { value: CampusEnum.Oxkutzcab, text: "Oxkutzcab" },
+        ]
+      case CampusEnum.Valladolid:
+        return [{ value: CampusEnum.Valladolid, text: "Valladolid" }]
+      case CampusEnum.Tizimin:
+        return [{ value: CampusEnum.Tizimin, text: "Tizimín" }]
+      case CampusEnum.Oxkutzcab:
+        return [{ value: CampusEnum.Oxkutzcab, text: "Oxkutzcab" }]
+      default:
+        return []
+    }
+  }
 
   const $reset = () => {
     userProfile.value = undefined
@@ -128,6 +152,7 @@ export const useAuthStore = defineStore("authStore", () => {
     userInitials,
     fullName,
     userProfile,
+    adminCampus,
     login,
     logout,
     getProfile,

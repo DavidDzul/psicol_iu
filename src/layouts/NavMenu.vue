@@ -26,7 +26,7 @@ const links = ref([
   },
   {
     text: "Usuarios",
-    icon: "mdi-account-box-multiple",
+    icon: "mdi-account-circle",
     group: true,
     links: [
       {
@@ -34,7 +34,22 @@ const links = ref([
         link: "/becarios",
         icon: "mdi-account",
       },
+      // {
+      //   text: "Egresados",
+      //   link: "/egresados",
+      //   icon: "mdi-account-outline",
+      // },
+      // {
+      //   text: "Empresas",
+      //   link: "/empresas",
+      //   icon: "mdi-city",
+      // },
     ],
+  },
+  {
+    text: "Configuración",
+    icon: "mdi-wrench",
+    link: "/configuraciones",
   },
 ])
 </script>

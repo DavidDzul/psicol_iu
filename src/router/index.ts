@@ -51,6 +51,16 @@ const routes: RouteRecordRaw[] = [
         name: "Students",
         components: { default: () => import("@/views/users/StudentsView.vue") },
       },
+      {
+        path: "usuarios/:id",
+        name: "StudentDetails",
+        components: { default: () => import("@/views/users/StudentDetails.vue") },
+      },
+      {
+        path: "configuraciones",
+        name: "Settings",
+        components: { default: () => import("@/views/settings/SettingsView.vue") },
+      },
     ],
   },
 ]

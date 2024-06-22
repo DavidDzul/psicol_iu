@@ -23,10 +23,11 @@ export type User = {
   enrollment: Scalars["String"]
   phone?: Maybe<Scalars["String"]>
   active: Scalars["Boolean"]
-  campus?: Maybe<CampusEnum>
-  role?: Maybe<UserTypeEnum>
+  campus: CampusEnum
+  generationId?: Maybe<Scalars["Float"]>
   createdAt: Scalars["String"]
   updatedAt: Scalars["String"]
+  generation?: Maybe<Generation>
 }
 
 export enum CampusEnum {
@@ -34,11 +35,6 @@ export enum CampusEnum {
   Valladolid = "VALLADOLID",
   Tizimin = "TIZIMIN",
   Oxkutzcab = "OXKUTZCAB",
-}
-
-export enum UserTypeEnum {
-  Student = "STUDENT",
-  Graduate = "GRADUATE",
 }
 
 export type Admin = {
@@ -50,6 +46,7 @@ export type Admin = {
   password: Scalars["String"]
   active: Scalars["Boolean"]
   role?: Maybe<RoleEnum>
+  campus: CampusEnum
   createdAt: Scalars["String"]
   updatedAt: Scalars["String"]
 }
@@ -59,6 +56,17 @@ export enum RoleEnum {
   Psicol = "PSICOL",
 }
 
+export type Generation = {
+  __typename?: "Generation"
+  id: Scalars["Int"]
+  generation: Scalars["Int"]
+  campus: CampusEnum
+  inProgress: Scalars["Boolean"]
+  createdAt: Scalars["String"]
+  updatedAt: Scalars["String"]
+  users: Array<User>
+}
+
 export type Token = {
   __typename?: "Token"
   token: Scalars["String"]
@@ -66,23 +74,69 @@ export type Token = {
 
 export type Query = {
   __typename?: "Query"
+  findAllGenerations: Array<Generation>
+  findAllUsers: Array<User>
+  findOneUser: User
   profile: Admin
   adminTest: Admin
 }
 
+export type QueryFindAllUsersArgs = {
+  campus: CampusEnum
+  generation: Scalars["Int"]
+}
+
+export type QueryFindOneUserArgs = {
+  id: Scalars["Int"]
+}
+
 export type Mutation = {
   __typename?: "Mutation"
+  createGeneration: Generation
+  updateGeneration: Generation
   createUser: User
+  testFindUsers: Array<User>
+  updateUser: User
   login: Token
+}
+
+export type MutationCreateGenerationArgs = {
+  createGenerationInput: CreateGenerationInput
+}
+
+export type MutationUpdateGenerationArgs = {
+  updateGenerationInput: UpdateGenerationInput
 }
 
 export type MutationCreateUserArgs = {
   createUserInput: CreateUserInput
 }
 
+export type MutationTestFindUsersArgs = {
+  campus: CampusEnum
+  generation: Scalars["Int"]
+}
+
+export type MutationUpdateUserArgs = {
+  updateUserInput: UpdateUserInput
+}
+
 export type MutationLoginArgs = {
   email: Scalars["String"]
   password: Scalars["String"]
+}
+
+export type CreateGenerationInput = {
+  generation: Scalars["Int"]
+  inProgress: Scalars["Boolean"]
+  campus: CampusEnum
+}
+
+export type UpdateGenerationInput = {
+  generation?: Maybe<Scalars["Int"]>
+  inProgress?: Maybe<Scalars["Boolean"]>
+  campus?: Maybe<CampusEnum>
+  id: Scalars["Int"]
 }
 
 export type CreateUserInput = {
@@ -92,6 +146,16 @@ export type CreateUserInput = {
   password: Scalars["String"]
   enrollment: Scalars["String"]
   phone?: Maybe<Scalars["String"]>
+  generationId: Scalars["Int"]
   campus: CampusEnum
-  role: UserTypeEnum
+}
+
+export type UpdateUserInput = {
+  firstName?: Maybe<Scalars["String"]>
+  lastName?: Maybe<Scalars["String"]>
+  email?: Maybe<Scalars["String"]>
+  password?: Maybe<Scalars["String"]>
+  phone?: Maybe<Scalars["String"]>
+  generationId?: Maybe<Scalars["Int"]>
+  id: Scalars["Int"]
 }
