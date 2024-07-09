@@ -25,8 +25,18 @@ const links = ref([
     link: "/",
   },
   {
+    text: "Asistencia",
+    icon: "mdi-file-check",
+    link: "/asistencia",
+  },
+  {
+    text: "Refrendo",
+    icon: "mdi-account-check",
+    link: "/refrendo",
+  },
+  {
     text: "Usuarios",
-    icon: "mdi-account-circle",
+    icon: "mdi-account-multiple",
     group: true,
     links: [
       {

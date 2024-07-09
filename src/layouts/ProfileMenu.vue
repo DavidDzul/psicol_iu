@@ -2,7 +2,7 @@
   <v-menu>
     <template v-slot:activator="{ props }">
       <v-btn icon v-bind="props">
-        <v-avatar color="grey">
+        <v-avatar color="blue">
           <span class="text-h5">{{ initials }}</span>
         </v-avatar>
       </v-btn>

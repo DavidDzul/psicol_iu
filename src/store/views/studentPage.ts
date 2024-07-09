@@ -63,8 +63,6 @@ export const useStudentPageStore = defineStore("studentPage", () => {
       const res = await mutateCreateStudent({ createUserInput })
       if (res?.data?.createUser) {
         const user = res.data.createUser
-        console.log(user)
-        console.log(variablesFind)
         if (variablesFind.value.campus === user.campus && variablesFind.value.generation === user.generationId) {
           studentsMap.value.set(user.id, user)
         }

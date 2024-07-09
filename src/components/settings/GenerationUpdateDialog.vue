@@ -9,7 +9,7 @@
               <v-text-field v-model.number="generation" v-bind="generationProps" label="Número de la generación"></v-text-field>
             </v-col>
             <v-col cols="12" md="12">
-              <!-- <v-select v-model="campus" v-bind="campusProps" label="Sede" item-title="text" item-value="value" :items="[]"></v-select> -->
+              <v-select v-model="campus" v-bind="campusProps" label="Sede" item-title="text" item-value="value" :items="campusArray"></v-select>
             </v-col>
             <v-col cols="12" md="12">
               <v-checkbox v-model="inProgress" v-bind="inProgressProps" label="¿Generación activa?" density="comfortable"></v-checkbox>
@@ -35,7 +35,7 @@ import * as yup from "yup"
 import { Generation, UpdateGenerationInput } from "@/grapqhl"
 import * as validations from "@/validations"
 
-// import { CampusArray } from "../../../constants"
+import { CampusOption } from "../../../constants"
 
 const vuetifyConfig = (state: PublicPathState) => ({
   props: {
@@ -59,6 +59,7 @@ const props = defineProps({
   modelValue: { type: Boolean, default: () => false },
   loading: { type: Boolean, default: () => false },
   editItem: { type: Object as PropType<Generation>, required: false },
+  campusArray: { type: Array as PropType<CampusOption[]>, default: () => [] },
 })
 
 watch(

@@ -66,7 +66,7 @@ const { show, config } = storeToRefs(useAlertStore())
   }
 }
 .login__cover {
-  background-image: url("@/assets/img/fondo.png");
+  background-image: url("@/assets/img/background.jpg");
   background-repeat: no-repeat;
   background-position: center center;
   background-size: cover;

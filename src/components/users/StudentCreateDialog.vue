@@ -27,6 +27,9 @@
               <v-phone-input v-model="phone" v-bind="phoneProps" label="Teléfono" validate-on="blur lazy"> </v-phone-input>
             </v-col>
             <v-col cols="12" md="6">
+              <v-select v-model="role" v-bind="roleProps" label="Tipo de usuario" item-title="text" item-value="value" :items="RoleUserArray"></v-select>
+            </v-col>
+            <v-col cols="12" md="12">
               <v-text-field v-model="password" v-bind="passwordProps" label="Contraseña" readonly></v-text-field>
             </v-col>
             <!-- <v-col cols="12" md="6">
@@ -54,7 +57,7 @@ import * as yup from "yup"
 import { CampusEnum, CreateUserInput, Generation } from "@/grapqhl"
 import * as validations from "@/validations"
 
-import { CampusOption } from "../../../constants"
+import { CampusOption, RoleUserArray } from "../../../constants"
 
 const props = defineProps({
   modelValue: { type: Boolean, default: () => false },
@@ -79,6 +82,7 @@ const { defineField, meta, values, resetForm } = useForm<CreateUserInput>({
       enrollment: validations.enrollment(),
       campus: validations.campus(),
       generationId: validations.generation(),
+      role: validations.role(),
     }),
   ),
 })
@@ -90,6 +94,7 @@ const [password, passwordProps] = defineField("password", vuetifyConfig)
 const [enrollment, enrollmentProps] = defineField("enrollment", vuetifyConfig)
 const [campus, campusProps] = defineField("campus", vuetifyConfig)
 const [generationId, generationIdProps] = defineField("generationId", vuetifyConfig)
+const [role, roleProps] = defineField("role", vuetifyConfig)
 
 const emit = defineEmits<{
   "update:modelValue": [value: boolean]

@@ -6,6 +6,7 @@
         <v-row v-if="expanded" no-gutters justify="end">
           <v-col cols="auto">
             <v-text-field
+              v-if="search"
               :model-value="modelValue"
               density="compact"
               hide-details
@@ -32,6 +33,7 @@ defineProps({
   expanded: { type: Boolean, default: () => false },
   title: { type: String, default: () => "" },
   buttonText: { type: String, default: () => "" },
+  search: { type: Boolean, default: () => false },
 })
 
 defineEmits<{

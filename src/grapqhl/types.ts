@@ -11,6 +11,8 @@ export type Scalars = {
   Boolean: boolean
   Int: number
   Float: number
+  /** The `Upload` scalar type represents a file upload. */
+  Upload: any
 }
 
 export type User = {
@@ -25,9 +27,19 @@ export type User = {
   active: Scalars["Boolean"]
   campus: CampusEnum
   generationId?: Maybe<Scalars["Float"]>
+  role: RoleUser
   createdAt: Scalars["String"]
   updatedAt: Scalars["String"]
   generation?: Maybe<Generation>
+  attendances?: Maybe<Attendance>
+  photos?: Maybe<Array<Photo>>
+  constancy?: Maybe<Array<Constancy>>
+  attendanceMap?: Maybe<Array<Attendance>>
+  images: Array<Photo>
+}
+
+export type UserAttendanceMapArgs = {
+  date: Scalars["String"]
 }
 
 export enum CampusEnum {
@@ -35,6 +47,11 @@ export enum CampusEnum {
   Valladolid = "VALLADOLID",
   Tizimin = "TIZIMIN",
   Oxkutzcab = "OXKUTZCAB",
+}
+
+export enum RoleUser {
+  Student = "STUDENT",
+  Graduate = "GRADUATE",
 }
 
 export type Admin = {
@@ -67,9 +84,58 @@ export type Generation = {
   users: Array<User>
 }
 
+export type Attendance = {
+  __typename?: "Attendance"
+  id: Scalars["Int"]
+  userId: Scalars["Int"]
+  checkIn: Scalars["String"]
+  checkOut?: Maybe<Scalars["String"]>
+  delay: Scalars["Boolean"]
+  justifiedDelay: Scalars["Boolean"]
+  justifiedAbsence: Scalars["Boolean"]
+  reason?: Maybe<ReasonEmun>
+  descripcion?: Maybe<Scalars["String"]>
+  createdAt: Scalars["String"]
+  updatedAt: Scalars["String"]
+  user: User
+  userAttendance?: Maybe<User>
+}
+
+export enum ReasonEmun {
+  Academic = "ACADEMIC",
+  Personal = "PERSONAL",
+  Other = "OTHER",
+}
+
+export type Photo = {
+  __typename?: "Photo"
+  id: Scalars["Int"]
+  userId: Scalars["Int"]
+  url: Scalars["String"]
+  admin: Scalars["Boolean"]
+  createdAt: Scalars["String"]
+}
+
+export type Constancy = {
+  __typename?: "Constancy"
+  id: Scalars["Int"]
+  name: Scalars["String"]
+  userId: Scalars["Int"]
+  url: Scalars["String"]
+  fileId: Scalars["String"]
+  startDate: Scalars["String"]
+  endDate: Scalars["String"]
+  createdAt: Scalars["String"]
+}
+
 export type Token = {
   __typename?: "Token"
   token: Scalars["String"]
+}
+
+export type SuccessMessage = {
+  __typename?: "SuccessMessage"
+  message: Scalars["String"]
 }
 
 export type Query = {
@@ -78,12 +144,6 @@ export type Query = {
   findAllUsers: Array<User>
   findOneUser: User
   profile: Admin
-  adminTest: Admin
-}
-
-export type QueryFindAllUsersArgs = {
-  campus: CampusEnum
-  generation: Scalars["Int"]
 }
 
 export type QueryFindOneUserArgs = {
@@ -92,12 +152,54 @@ export type QueryFindOneUserArgs = {
 
 export type Mutation = {
   __typename?: "Mutation"
+  createConstancy: Constancy
+  createPhoto: Photo
+  removePhoto: SuccessMessage
+  generateAttendance: User
+  createAttendance: Attendance
+  updateAttendance: Attendance
+  findAttendanceUsers: Array<Attendance>
   createGeneration: Generation
   updateGeneration: Generation
   createUser: User
-  testFindUsers: Array<User>
+  searchAllUsers: Array<User>
   updateUser: User
   login: Token
+}
+
+export type MutationCreateConstancyArgs = {
+  userId: Scalars["Int"]
+  recordFile: Scalars["Upload"]
+  startDate: Scalars["String"]
+  endDate: Scalars["String"]
+}
+
+export type MutationCreatePhotoArgs = {
+  userId: Scalars["Int"]
+  photo: Scalars["Upload"]
+}
+
+export type MutationRemovePhotoArgs = {
+  id?: Maybe<Scalars["Int"]>
+  userId: Scalars["Int"]
+}
+
+export type MutationGenerateAttendanceArgs = {
+  attendanceInput: AttendanceInput
+}
+
+export type MutationCreateAttendanceArgs = {
+  createAttendanceInput: CreateAttendanceInput
+}
+
+export type MutationUpdateAttendanceArgs = {
+  updateAttendanceInput: UpdateAttendanceInput
+}
+
+export type MutationFindAttendanceUsersArgs = {
+  campus: CampusEnum
+  generation: Scalars["Int"]
+  date: Scalars["String"]
 }
 
 export type MutationCreateGenerationArgs = {
@@ -112,9 +214,10 @@ export type MutationCreateUserArgs = {
   createUserInput: CreateUserInput
 }
 
-export type MutationTestFindUsersArgs = {
+export type MutationSearchAllUsersArgs = {
   campus: CampusEnum
   generation: Scalars["Int"]
+  date?: Maybe<Scalars["String"]>
 }
 
 export type MutationUpdateUserArgs = {
@@ -124,6 +227,31 @@ export type MutationUpdateUserArgs = {
 export type MutationLoginArgs = {
   email: Scalars["String"]
   password: Scalars["String"]
+}
+
+export type AttendanceInput = {
+  enrollment: Scalars["String"]
+}
+
+export type CreateAttendanceInput = {
+  userId: Scalars["Int"]
+  date: Scalars["String"]
+  delay: Scalars["Boolean"]
+  justifiedDelay: Scalars["Boolean"]
+  justifiedAbsence: Scalars["Boolean"]
+  reason?: Maybe<ReasonEmun>
+  descripcion?: Maybe<Scalars["String"]>
+}
+
+export type UpdateAttendanceInput = {
+  userId?: Maybe<Scalars["Int"]>
+  date?: Maybe<Scalars["String"]>
+  delay?: Maybe<Scalars["Boolean"]>
+  justifiedDelay?: Maybe<Scalars["Boolean"]>
+  justifiedAbsence?: Maybe<Scalars["Boolean"]>
+  reason?: Maybe<ReasonEmun>
+  descripcion?: Maybe<Scalars["String"]>
+  id: Scalars["Int"]
 }
 
 export type CreateGenerationInput = {
@@ -148,6 +276,7 @@ export type CreateUserInput = {
   phone?: Maybe<Scalars["String"]>
   generationId: Scalars["Int"]
   campus: CampusEnum
+  role: RoleUser
 }
 
 export type UpdateUserInput = {
@@ -157,5 +286,6 @@ export type UpdateUserInput = {
   password?: Maybe<Scalars["String"]>
   phone?: Maybe<Scalars["String"]>
   generationId?: Maybe<Scalars["Int"]>
+  role?: Maybe<RoleUser>
   id: Scalars["Int"]
 }

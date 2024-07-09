@@ -1,20 +1,24 @@
+import dayjs from "dayjs"
 import { defineStore, storeToRefs } from "pinia"
 import { computed, ref, watch } from "vue"
 import { useRoute, useRouter } from "vue-router"
 
-import { CreateUserInput, UpdateUserInput, User } from "@/grapqhl"
+import { CreateUserInput, Photo, UpdateUserInput, User } from "@/grapqhl"
 import { useUsersStore } from "@/store/api/usersStore"
 import { useAppStore } from "@/store/app"
 
 export const useStudentDetailsPageStore = defineStore("studentDetailsPage", () => {
-  const { studentsMap, loadingStudent, selectedUser, variablesUser } = storeToRefs(useUsersStore())
-  const { fetchStudent } = useUsersStore()
+  const { studentsMap, loadingStudent, selectedUser, variablesUser, loadingAddPhoto, loadingRemovePhoto, loadingAddFile } = storeToRefs(useUsersStore())
+  const { fetchStudent, mutateAddPhoto, mutateRemovePhoto, mutateAddFile } = useUsersStore()
 
   const { setLoading } = useAppStore()
   const route = useRoute()
   const router = useRouter()
-
+  const photoDialog = ref(false)
   const studentState = ref([])
+  const file = ref<File | null>(null)
+  const previewUrl = ref("")
+  const createFileDialog = ref(false)
 
   watch(
     () => route.params.id,
@@ -46,6 +50,7 @@ export const useStudentDetailsPageStore = defineStore("studentDetailsPage", () =
 
   const students = computed(() => [...studentsMap.value.values()])
   const loading = computed(() => loadingStudent.value)
+  const addPhotoLoading = computed(() => loadingAddPhoto.value)
 
   const links = computed(() => [
     {
@@ -60,11 +65,89 @@ export const useStudentDetailsPageStore = defineStore("studentDetailsPage", () =
     },
   ])
 
+  const openCreteFile = () => {
+    createFileDialog.value = true
+  }
+
+  const changePhoto = (event: File | File[] | null) => {
+    if (event) {
+      const fileToLoad = Array.isArray(event) ? event[0] : event
+      previewUrl.value = window.URL.createObjectURL(fileToLoad)
+      file.value = fileToLoad
+      photoDialog.value = true
+    } else {
+      previewUrl.value = ""
+      file.value = null
+    }
+  }
+
+  const savePhoto = async () => {
+    if (file.value) {
+      if (!selectedUser.value) return
+      try {
+        const res = await mutateAddPhoto({ photo: file.value, userId: selectedUser.value?.id })
+        if (res) {
+          photoDialog.value = false
+        }
+      } catch (e) {
+        console.error(e)
+      }
+    }
+  }
+
+  const onRemovePhoto = async (photo: Photo) => {
+    if (!selectedUser.value) return
+    try {
+      const res = await mutateRemovePhoto({
+        id: photo.id,
+        userId: selectedUser.value.id,
+      })
+      if (res) {
+        selectedUser.value = {
+          ...selectedUser.value,
+          images: selectedUser.value.images.filter((photoMap) => {
+            return photoMap.id !== photo.id
+          }),
+        }
+      }
+    } catch (e) {
+      console.error(e)
+    }
+  }
+
+  const onAddFile = async (file: File, startDate: string, endDate: string) => {
+    if (!selectedUser.value) return
+    try {
+      const formattedStartDate = dayjs(startDate).format("YYYY/MM/DD")
+      const formattedEndDate = dayjs(endDate).format("YYYY/MM/DD")
+      const res = await mutateAddFile({
+        userId: selectedUser.value.id,
+        startDate: formattedStartDate,
+        endDate: formattedEndDate,
+        recordFile: file,
+      })
+      if (res) {
+        createFileDialog.value = false
+      }
+    } catch (e) {
+      console.error(e)
+    }
+  }
+
   return {
     links,
     loading,
     students,
+    previewUrl,
+    photoDialog,
     selectedUser,
     studentState,
+    addPhotoLoading,
+    createFileDialog,
+    onAddFile,
+    savePhoto,
+    changePhoto,
+    openCreteFile,
+    onRemovePhoto,
   }
 })

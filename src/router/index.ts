@@ -61,6 +61,16 @@ const routes: RouteRecordRaw[] = [
         name: "Settings",
         components: { default: () => import("@/views/settings/SettingsView.vue") },
       },
+      {
+        path: "asistencia",
+        name: "Attendance",
+        components: { default: () => import("@/views/attendance/AttendanceView.vue") },
+      },
+      {
+        path: "refrendo",
+        name: "Autorization",
+        components: { default: () => import("@/views/scholarship/AutorizationView.vue") },
+      },
     ],
   },
 ]

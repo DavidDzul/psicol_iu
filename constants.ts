@@ -1,4 +1,6 @@
-import { CampusEnum } from "./src/grapqhl"
+import { CampusEnum, ReasonEmun, RoleUser } from "./src/grapqhl"
+
+export const FILE_URL = import.meta.env.VITE_FILES_URL
 
 export interface CampusOption {
   value: CampusEnum
@@ -35,3 +37,18 @@ export const CampusTypeMap = new Map([
     },
   ],
 ])
+
+export const ReasonArray = [
+  { value: ReasonEmun.Academic, text: "Motivo académicos" },
+  { value: ReasonEmun.Personal, text: "Motivos personales" },
+  { value: ReasonEmun.Other, text: "Otro" },
+]
+
+export const RoleUserArray = [
+  { value: RoleUser.Student, text: "Becario" },
+  { value: RoleUser.Graduate, text: "Egresado" },
+]
+
+export const deletePhotoTitle = "Eliminar Usuario"
+export const deletePhotoBody = (): string =>
+  `¿Desea eliminar la foto de perfil de este usuario? Al realizar esta acción se eliminara la imagen seleccionada, y posteriormente podrá asignarle una nueva. ¿Desea continuar?`

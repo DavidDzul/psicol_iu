@@ -14,11 +14,14 @@
             <v-col cols="12" md="6">
               <v-text-field v-model="email" v-bind="emailProps" label="Email"></v-text-field>
             </v-col>
-            <v-col cols="12" md="6">
+            <!-- <v-col cols="12" md="6">
               <v-select v-model="campus" label="Sede" item-title="text" item-value="value" :items="campusArray" readonly></v-select>
-            </v-col>
+            </v-col> -->
             <v-col cols="12" md="6">
               <v-text-field v-model="enrollment" label="Matrícula" readonly> </v-text-field>
+            </v-col>
+            <v-col cols="12" md="6">
+              <v-select v-model="role" v-bind="roleProps" label="Tipo de usuario" item-title="text" item-value="value" :items="RoleUserArray"></v-select>
             </v-col>
             <v-col cols="12" md="6">
               <v-phone-input v-model="phone" v-bind="phoneProps" label="Teléfono" validate-on="blur lazy"> </v-phone-input>
@@ -51,7 +54,7 @@ import * as yup from "yup"
 import { CampusEnum, UpdateUserInput, User } from "@/grapqhl"
 import * as validations from "@/validations"
 
-import { CampusOption } from "../../../constants"
+import { CampusOption, RoleUserArray } from "../../../constants"
 
 const vuetifyConfig = (state: PublicPathState) => ({
   props: {
@@ -67,6 +70,7 @@ const { defineField, meta, values, resetForm, setValues } = useForm<UpdateUserIn
       password: validations.updatePassword(),
       confirmation: validations.confirmation(),
       phone: validations.phone(),
+      role: validations.role(),
     }),
   ),
 })
@@ -76,6 +80,7 @@ const [email, emailProps] = defineField("email", vuetifyConfig)
 const [phone, phoneProps] = defineField("phone")
 const [password, passwordProps] = defineField("password", vuetifyConfig)
 const [confirmation, confirmationProps] = defineField("confirmation", vuetifyConfig)
+const [role, roleProps] = defineField("role", vuetifyConfig)
 const enrollment = ref("")
 const campus = ref("")
 
@@ -102,6 +107,7 @@ watch(
         lastName: value.lastName,
         phone: value.phone,
         email: value.email,
+        role: value.role,
       })
     } else {
       resetForm()

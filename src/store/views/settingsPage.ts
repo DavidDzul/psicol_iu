@@ -2,11 +2,13 @@ import { defineStore, storeToRefs } from "pinia"
 import { computed, ref } from "vue"
 
 import { CreateGenerationInput, Generation, UpdateGenerationInput, User } from "@/grapqhl"
+import { useAuthStore } from "@/store/api/authStore"
 import { useSettingsStore } from "@/store/api/settingsStore"
 
 export const useSettingsPageStore = defineStore("settingsPage", () => {
   const { loadingGenerations, generationsMap } = storeToRefs(useSettingsStore())
   const { refetchGenerations, mutateCreateGeneration, mutateUpdateGeneration } = useSettingsStore()
+  const { adminCampus } = storeToRefs(useAuthStore())
 
   const createGenerationDialog = ref(false)
   const updateGenerationDialog = ref(false)
@@ -82,6 +84,7 @@ export const useSettingsPageStore = defineStore("settingsPage", () => {
     generations,
     searchGenerations,
     settingTab,
+    adminCampus,
     onCreateGeneration,
     openEditGeneration,
     onUpdateGeneration,

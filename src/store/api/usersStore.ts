@@ -4,18 +4,22 @@ import { ref } from "vue"
 import { useRouter } from "vue-router"
 
 import {
+  ADD_FILE_TO_USER,
+  ADD_PHOTO_TO_USER,
   CampusEnum,
   CREATE_USER,
+  DELETE_PHOTO_FROM_USER,
   GET_USER,
-  GET_USERS,
   Mutation,
+  MutationCreateConstancyArgs,
+  MutationCreatePhotoArgs,
   MutationCreateUserArgs,
-  MutationTestFindUsersArgs,
+  MutationRemovePhotoArgs,
+  MutationSearchAllUsersArgs,
   MutationUpdateUserArgs,
   Query,
-  QueryFindAllUsersArgs,
   QueryFindOneUserArgs,
-  TEST_USERS,
+  SEATCH_USERS,
   UPDATE_USER,
   User,
 } from "@/grapqhl"
@@ -37,7 +41,7 @@ export const useUsersStore = defineStore("usersStore", () => {
     mutate: mutateTestUsers,
     onDone: onResultStudents,
     onError: onErrorStudents,
-  } = useMutation<Mutation, MutationTestFindUsersArgs>(TEST_USERS, {
+  } = useMutation<Mutation, MutationSearchAllUsersArgs>(SEATCH_USERS, {
     fetchPolicy: "no-cache",
   })
 
@@ -68,6 +72,33 @@ export const useUsersStore = defineStore("usersStore", () => {
     fetchPolicy: "no-cache",
   })
 
+  const {
+    loading: loadingAddPhoto,
+    mutate: mutateAddPhoto,
+    onDone: onDoneAddPhoto,
+    onError: onErrorAddPhoto,
+  } = useMutation<Mutation, MutationCreatePhotoArgs>(ADD_PHOTO_TO_USER, {
+    fetchPolicy: "no-cache",
+  })
+
+  const {
+    loading: loadingRemovePhoto,
+    mutate: mutateRemovePhoto,
+    onDone: onDoneRemovePhoto,
+    onError: onErrorRemovePhoto,
+  } = useMutation<Mutation, MutationRemovePhotoArgs>(DELETE_PHOTO_FROM_USER, {
+    fetchPolicy: "no-cache",
+  })
+
+  const {
+    loading: loadingAddFile,
+    mutate: mutateAddFile,
+    onDone: onDoneAddFile,
+    onError: onErrorAddFile,
+  } = useMutation<Mutation, MutationCreateConstancyArgs>(ADD_FILE_TO_USER, {
+    fetchPolicy: "no-cache",
+  })
+
   const fetchStudent = () => loadStudent() || refetchStudent()
 
   onResultStudent((res) => {
@@ -77,8 +108,8 @@ export const useUsersStore = defineStore("usersStore", () => {
   })
 
   onResultStudents((res) => {
-    if (res?.data?.testFindUsers) {
-      studentsMap.value = new Map(res.data.testFindUsers.map((m) => [m.id, m]))
+    if (res?.data?.searchAllUsers) {
+      studentsMap.value = new Map(res.data.searchAllUsers.map((m) => [m.id, m]))
     }
   })
 
@@ -119,17 +150,66 @@ export const useUsersStore = defineStore("usersStore", () => {
     })
   })
 
+  onDoneAddPhoto((param) => {
+    if (param.data?.createPhoto) {
+      showAlert({
+        title: "Foto agregada exitosamente.",
+        status: "success",
+      })
+      if (!selectedUser.value) return
+
+      selectedUser.value.images = []
+      selectedUser.value = {
+        ...selectedUser.value,
+        images: [param.data.createPhoto],
+      }
+    }
+  })
+
+  onErrorAddPhoto((error) => {
+    showAlert({
+      title: "Error al agregar la foto.",
+      body: "Intentar mas tarde",
+      status: "error",
+      icon: "mdi-alert",
+    })
+  })
+
+  onDoneRemovePhoto((param) => {
+    if (param.data) {
+      showAlert({
+        title: "Foto eliminada exitosamente.",
+        status: "success",
+      })
+    }
+  })
+
+  onErrorRemovePhoto((error) => {
+    showAlert({
+      title: "Error al eliminar la foto.",
+      body: "Intentar mas tarde",
+      status: "error",
+      icon: "mdi-alert",
+    })
+  })
+
   return {
     studentsMap,
     selectedUser,
     variablesUser,
+    loadingAddFile,
     loadingStudent,
+    loadingAddPhoto,
+    loadingRemovePhoto,
     loadingCreateStudent,
     loadingUpdateStudent,
     fetchStudent,
+    mutateAddFile,
+    mutateAddPhoto,
+    mutateTestUsers,
+    mutateRemovePhoto,
     mutateCreateStudent,
     mutateUpdateStudent,
-    mutateTestUsers,
     $reset,
   }
 })
