@@ -22,6 +22,11 @@ export const GET_AUTORIZATION = gql`
         justifiedDelay
         justifiedAbsence
       }
+      documents {
+        id
+        startDate
+        endDate
+      }
     }
   }
 `

@@ -1,6 +1,6 @@
 <template>
   <BreadCrumbs :items="links" />
-  <AutorizationTable :users="autorization" :campus-array="adminCampus" :generations="generations" @consult="onConsult" />
+  <AutorizationTable :users="autorization" :campus-array="adminCampus" :variables="variables" :generations="generations" @consult="onConsult" />
 </template>
 
 <script lang="ts" setup>

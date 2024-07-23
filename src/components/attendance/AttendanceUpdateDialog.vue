@@ -99,8 +99,8 @@ watch(
       resetForm()
     } else {
       userName.value = value.userAttendance?.firstName + " " + value.userAttendance?.lastName
-      checkIn.value = converTimestamp(value.checkIn) || ""
-      checkOut.value = converTimestamp(value?.checkOut || undefined) || ""
+      checkIn.value = value.checkIn || ""
+      checkOut.value = value?.checkOut || ""
       setValues({
         justifiedDelay: value.justifiedDelay,
         justifiedAbsence: value.justifiedAbsence,

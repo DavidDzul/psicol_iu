@@ -38,9 +38,25 @@ export const CREATE_ATTENDANCE = gql`
   mutation ($createAttendanceInput: CreateAttendanceInput!) {
     createAttendance(createAttendanceInput: $createAttendanceInput) {
       id
+      checkIn
+      checkOut
+      delay
+      justifiedDelay
+      justifiedAbsence
+      reason
+      descripcion
+      userAttendance {
+        id
+        firstName
+        lastName
+        enrollment
+        campus
+        generationId
+      }
     }
   }
 `
+
 export const UPDATE_ATTENDANCE = gql`
   mutation ($updateAttendanceInput: UpdateAttendanceInput!) {
     updateAttendance(updateAttendanceInput: $updateAttendanceInput) {

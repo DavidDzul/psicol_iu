@@ -85,6 +85,41 @@ export const useAttendanceStore = defineStore("attendanceStore", () => {
     console.error(err)
   })
 
+  onDoneCreateAttendance((res) => {
+    if (res?.data?.createAttendance) {
+      showAlert({
+        title: "Asistencia agregada exitosamente.",
+        status: "success",
+      })
+    }
+  })
+
+  onErrorCreateAttendance((err) => {
+    console.error(err)
+    showAlert({
+      title: "Error al agregar la asistencia. Intente más tarde.",
+      status: "error",
+    })
+  })
+
+  onDoneUpdateAttendance((param) => {
+    if (param?.data?.updateAttendance) {
+      showAlert({
+        title: "Asistencia actualizada exitosamente.",
+        status: "success",
+      })
+      attendanceMap.value.set(param.data.updateAttendance.id, param.data.updateAttendance)
+    }
+  })
+
+  onErrorUpdateAttendance((err) => {
+    console.error(err)
+    showAlert({
+      title: "Error al actualizar la asistencia. Intente más tarde.",
+      status: "error",
+    })
+  })
+
   return {
     attendanceMap,
     usersAttendanceMap,

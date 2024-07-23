@@ -11,7 +11,7 @@
           <label style="color: gray">Seleccione los filtros de búsqueda:</label>
         </v-col>
         <v-col cols="3">
-          <v-select v-model="campusData" density="compact" label="Sede" :items="campusArray" item-title="text" item-value="value" :rules="[(v) => !!v || 'Sede es requerida']"></v-select>
+          <v-select v-model="campusData" density="compact" label="Sede" :items="campusArray" item-title="text" item-value="value" :rules="[(v: any) => !!v || 'Sede es requerida']"></v-select>
         </v-col>
         <v-col cols="3">
           <v-select
@@ -21,7 +21,7 @@
             :items="campusGenerations"
             item-title="generation"
             item-value="id"
-            :rules="[(v) => !!v || 'Generación es requerida']"
+            :rules="[(v: any) => !!v || 'Generación es requerida']"
             :disabled="!campusValid"
           ></v-select>
         </v-col>
@@ -47,7 +47,17 @@
       <div style="width: 100%">
         <v-tooltip location="bottom" text="Autorizar">
           <template v-slot:activator="{ props }">
-            <v-btn v-bind="props" variant="text" color="success" density="comfortable" icon="mdi-account-check" class="mr-2" @click="$emit('edit', item.id)"> </v-btn>
+            <v-btn
+              v-bind="props"
+              variant="text"
+              color="success"
+              density="comfortable"
+              icon="mdi-account-check"
+              class="mr-2"
+              :disabled="validateLastConstancy(item.documents || []) ? false : true"
+              @click="$emit('edit', item.id)"
+            >
+            </v-btn>
           </template>
         </v-tooltip>
       </div>
@@ -73,6 +83,13 @@
               {{ countJustifiedDelay(item.attendanceMap || []) }}
             </div>
           </div>
+          <div class="one-content">
+            <div class="expanded-column">
+              <span class="font-weight-medium">Constancia de estudios:</span>
+              <template v-if="validateLastConstancy(item.documents || [])"> <span style="color: green"> Válido</span> <v-icon color="success">mdi-check</v-icon> </template>
+              <template v-else> <span style="color: red"> Inválido</span> <v-icon color="error">mdi-close</v-icon> </template>
+            </div>
+          </div>
         </td>
       </tr>
     </template>
@@ -84,7 +101,7 @@ import VueDatePicker from "@vuepic/vue-datepicker"
 import dayjs from "dayjs"
 import { computed, onBeforeMount, PropType, ref, watch } from "vue"
 
-import { Attendance, CampusEnum, Generation, User } from "@/grapqhl"
+import { Attendance, CampusEnum, Constancy, Generation, User } from "@/grapqhl"
 
 import { CampusOption } from "../../../constants"
 import "@vuepic/vue-datepicker/dist/main.css"
@@ -172,7 +189,6 @@ onBeforeMount(() => {
 })
 
 const consultData = () => {
-  console.log(month.value)
   const dateString = dayjs(`${month.value.year}-${String(month.value.month + 1).padStart(2, "0")}-01`).format("YYYY-MM-DD")
   if (campusData.value && generationData.value) {
     emit("consult", campusData.value, generationData.value, dateString)
@@ -207,6 +223,20 @@ const countJustifiedAbsence = (value: Attendance[] | undefined) => {
     return justifiedAbsence.length
   }
 }
+
+const validateLastConstancy = (value: Constancy[] | undefined) => {
+  if (value?.length) {
+    const doc = value[0]
+    const docEnd = dayjs(doc.endDate)
+    const now = dayjs()
+    if (now.isBefore(docEnd)) {
+      return true
+    } else {
+      return false
+    }
+  }
+  return false
+}
 </script>
 
 <style scoped>
@@ -217,13 +247,16 @@ const countJustifiedAbsence = (value: Attendance[] | undefined) => {
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   padding: 10px;
   transition: box-shadow 0.3s ease;
-
-  /* Estilos adicionales según necesidad */
 }
 
 .expanded-content {
   display: grid;
   grid-template-columns: 1fr 1fr;
+  /* gap: 16px; */
+}
+.one-content {
+  display: grid;
+  grid-template-columns: 1fr;
   /* gap: 16px; */
 }
 .expanded-column {

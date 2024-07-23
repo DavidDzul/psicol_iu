@@ -16,7 +16,6 @@ export const CREATE_USER = gql`
     }
   }
 `
-
 export const SEATCH_USERS = gql`
   mutation ($campus: CampusEnum!, $generation: Int!) {
     searchAllUsers(campus: $campus, generation: $generation) {
@@ -65,9 +64,18 @@ export const GET_USER = gql`
         id
         url
       }
+      documents {
+        id
+        userId
+        name
+        fileId
+        startDate
+        endDate
+      }
     }
   }
 `
+
 export const ADD_PHOTO_TO_USER = gql`
   mutation createPhoto($userId: Int!, $photo: Upload!) {
     createPhoto(userId: $userId, photo: $photo) {
@@ -86,6 +94,7 @@ export const DELETE_PHOTO_FROM_USER = gql`
     }
   }
 `
+
 export const ADD_FILE_TO_USER = gql`
   mutation ($startDate: String!, $endDate: String!, $recordFile: Upload!, $userId: Int!) {
     createConstancy(startDate: $startDate, endDate: $endDate, recordFile: $recordFile, userId: $userId) {
@@ -95,6 +104,14 @@ export const ADD_FILE_TO_USER = gql`
       name
       startDate
       endDate
+    }
+  }
+`
+
+export const DELETE_CONSTANCY_TO_USER = gql`
+  mutation ($id: Int!) {
+    removeConstancy(id: $id) {
+      message
     }
   }
 `

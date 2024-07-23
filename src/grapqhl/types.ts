@@ -36,6 +36,8 @@ export type User = {
   constancy?: Maybe<Array<Constancy>>
   attendanceMap?: Maybe<Array<Attendance>>
   images: Array<Photo>
+  documents: Array<Constancy>
+  lastConstancy?: Maybe<Constancy>
 }
 
 export type UserAttendanceMapArgs = {
@@ -90,6 +92,7 @@ export type Attendance = {
   userId: Scalars["Int"]
   checkIn: Scalars["String"]
   checkOut?: Maybe<Scalars["String"]>
+  recordDate: Scalars["String"]
   delay: Scalars["Boolean"]
   justifiedDelay: Scalars["Boolean"]
   justifiedAbsence: Scalars["Boolean"]
@@ -98,7 +101,7 @@ export type Attendance = {
   createdAt: Scalars["String"]
   updatedAt: Scalars["String"]
   user: User
-  userAttendance?: Maybe<User>
+  userAttendance: User
 }
 
 export enum ReasonEmun {
@@ -141,8 +144,8 @@ export type SuccessMessage = {
 export type Query = {
   __typename?: "Query"
   findAllGenerations: Array<Generation>
-  findAllUsers: Array<User>
   findOneUser: User
+  findAllUsers: Array<User>
   profile: Admin
 }
 
@@ -153,6 +156,7 @@ export type QueryFindOneUserArgs = {
 export type Mutation = {
   __typename?: "Mutation"
   createConstancy: Constancy
+  removeConstancy: SuccessMessage
   createPhoto: Photo
   removePhoto: SuccessMessage
   generateAttendance: User
@@ -161,8 +165,8 @@ export type Mutation = {
   findAttendanceUsers: Array<Attendance>
   createGeneration: Generation
   updateGeneration: Generation
-  createUser: User
   searchAllUsers: Array<User>
+  createUser: User
   updateUser: User
   login: Token
 }
@@ -172,6 +176,10 @@ export type MutationCreateConstancyArgs = {
   recordFile: Scalars["Upload"]
   startDate: Scalars["String"]
   endDate: Scalars["String"]
+}
+
+export type MutationRemoveConstancyArgs = {
+  id: Scalars["Int"]
 }
 
 export type MutationCreatePhotoArgs = {
@@ -210,14 +218,14 @@ export type MutationUpdateGenerationArgs = {
   updateGenerationInput: UpdateGenerationInput
 }
 
-export type MutationCreateUserArgs = {
-  createUserInput: CreateUserInput
-}
-
 export type MutationSearchAllUsersArgs = {
   campus: CampusEnum
   generation: Scalars["Int"]
   date?: Maybe<Scalars["String"]>
+}
+
+export type MutationCreateUserArgs = {
+  createUserInput: CreateUserInput
 }
 
 export type MutationUpdateUserArgs = {

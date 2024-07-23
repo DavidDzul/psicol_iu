@@ -8,8 +8,8 @@ import { useUsersStore } from "@/store/api/usersStore"
 import { useAppStore } from "@/store/app"
 
 export const useStudentDetailsPageStore = defineStore("studentDetailsPage", () => {
-  const { studentsMap, loadingStudent, selectedUser, variablesUser, loadingAddPhoto, loadingRemovePhoto, loadingAddFile } = storeToRefs(useUsersStore())
-  const { fetchStudent, mutateAddPhoto, mutateRemovePhoto, mutateAddFile } = useUsersStore()
+  const { studentsMap, loadingStudent, selectedUser, variablesUser, loadingAddPhoto, loadingRemovePhoto, loadingAddFile, loadingRemoveFile } = storeToRefs(useUsersStore())
+  const { fetchStudent, mutateAddPhoto, mutateRemovePhoto, mutateAddFile, mutateRemoveFile } = useUsersStore()
 
   const { setLoading } = useAppStore()
   const route = useRoute()
@@ -27,7 +27,6 @@ export const useStudentDetailsPageStore = defineStore("studentDetailsPage", () =
 
   const checkRouteId = async (idString: string | string[]) => {
     const id = !Array.isArray(idString) ? parseInt(idString) : NaN
-    console.log(id)
     if (route.name === "StudentDetails" && !Array.isArray(id) && !isNaN(id) && variablesUser.value?.id !== id) {
       variablesUser.value = { id }
       setLoading(true)
@@ -134,6 +133,25 @@ export const useStudentDetailsPageStore = defineStore("studentDetailsPage", () =
     }
   }
 
+  const onRemoveConstacy = async (id: number) => {
+    if (!selectedUser.value) return
+    try {
+      const res = await mutateRemoveFile({
+        id,
+      })
+      if (res) {
+        selectedUser.value = {
+          ...selectedUser.value,
+          documents: selectedUser.value.documents.filter((doc) => {
+            return doc.id !== id
+          }),
+        }
+      }
+    } catch (e) {
+      console.error(e)
+    }
+  }
+
   return {
     links,
     loading,
@@ -149,5 +167,6 @@ export const useStudentDetailsPageStore = defineStore("studentDetailsPage", () =
     changePhoto,
     openCreteFile,
     onRemovePhoto,
+    onRemoveConstacy,
   }
 })

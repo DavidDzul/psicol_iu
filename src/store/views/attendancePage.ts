@@ -1,3 +1,4 @@
+import dayjs from "dayjs"
 import { defineStore, storeToRefs } from "pinia"
 import { computed, ref } from "vue"
 
@@ -66,10 +67,12 @@ export const useAttendancePageStore = defineStore("attendancePage", () => {
     try {
       const res = await mutateCreateAttendance({ createAttendanceInput: input })
       if (res?.data?.createAttendance) {
-        // const user = res.data.createUser
-        // if (variablesFind.value.campus === user.campus && variablesFind.value.generation === user.generationId) {
-        //   studentsMap.value.set(user.id, user)
-        // }
+        const data = res.data.createAttendance
+        const dateResult = dayjs(data.checkIn).startOf("day")
+        const dateVariable = dayjs(variables.value.date).startOf("day")
+        if (variables.value.campus === data.userAttendance.campus && variables.value.generation === data.userAttendance.generationId && dateResult.isSame(dateVariable)) {
+          attendanceMap.value.set(data.id, data)
+        }
         createDialog.value = false
       }
     } catch (e) {

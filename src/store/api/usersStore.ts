@@ -8,12 +8,14 @@ import {
   ADD_PHOTO_TO_USER,
   CampusEnum,
   CREATE_USER,
+  DELETE_CONSTANCY_TO_USER,
   DELETE_PHOTO_FROM_USER,
   GET_USER,
   Mutation,
   MutationCreateConstancyArgs,
   MutationCreatePhotoArgs,
   MutationCreateUserArgs,
+  MutationRemoveConstancyArgs,
   MutationRemovePhotoArgs,
   MutationSearchAllUsersArgs,
   MutationUpdateUserArgs,
@@ -96,6 +98,15 @@ export const useUsersStore = defineStore("usersStore", () => {
     onDone: onDoneAddFile,
     onError: onErrorAddFile,
   } = useMutation<Mutation, MutationCreateConstancyArgs>(ADD_FILE_TO_USER, {
+    fetchPolicy: "no-cache",
+  })
+
+  const {
+    loading: loadingRemoveFile,
+    mutate: mutateRemoveFile,
+    onDone: onDoneRemoveFile,
+    onError: onErrorRemoveFile,
+  } = useMutation<Mutation, MutationRemoveConstancyArgs>(DELETE_CONSTANCY_TO_USER, {
     fetchPolicy: "no-cache",
   })
 
@@ -193,6 +204,48 @@ export const useUsersStore = defineStore("usersStore", () => {
     })
   })
 
+  onDoneAddFile((param) => {
+    if (param.data?.createConstancy) {
+      showAlert({
+        title: "Constancia de estudios agregada exitosamente.",
+        status: "success",
+      })
+      if (!selectedUser.value) return
+
+      selectedUser.value = {
+        ...selectedUser.value,
+        documents: [...selectedUser.value.documents, param.data.createConstancy],
+      }
+    }
+  })
+
+  onErrorAddFile((error) => {
+    showAlert({
+      title: "Error al agregar la constancia de estudios.",
+      body: "Intentar mas tarde",
+      status: "error",
+      icon: "mdi-alert",
+    })
+  })
+
+  onDoneRemoveFile((param) => {
+    if (param.data?.removeConstancy) {
+      showAlert({
+        title: "Constancia de estudios eliminada exitosamente.",
+        status: "success",
+      })
+    }
+  })
+
+  onErrorRemoveFile((error) => {
+    showAlert({
+      title: "Error al eliminar la constancia de estudios.",
+      body: "Intentar mas tarde",
+      status: "error",
+      icon: "mdi-alert",
+    })
+  })
+
   return {
     studentsMap,
     selectedUser,
@@ -200,6 +253,7 @@ export const useUsersStore = defineStore("usersStore", () => {
     loadingAddFile,
     loadingStudent,
     loadingAddPhoto,
+    loadingRemoveFile,
     loadingRemovePhoto,
     loadingCreateStudent,
     loadingUpdateStudent,
@@ -207,6 +261,7 @@ export const useUsersStore = defineStore("usersStore", () => {
     mutateAddFile,
     mutateAddPhoto,
     mutateTestUsers,
+    mutateRemoveFile,
     mutateRemovePhoto,
     mutateCreateStudent,
     mutateUpdateStudent,

@@ -14,7 +14,7 @@
           <label style="color: gray">Seleccione los filtros de búsqueda:</label>
         </v-col>
         <v-col cols="3">
-          <v-select v-model="campusData" density="compact" label="Sede" :items="campusArray" item-title="text" item-value="value" :rules="[(v) => !!v || 'Sede es requerida']"></v-select>
+          <v-select v-model="campusData" density="compact" label="Sede" :items="campusArray" item-title="text" item-value="value" :rules="[(v: any) => !!v || 'Sede es requerida']"></v-select>
         </v-col>
         <v-col cols="3">
           <v-select
@@ -24,7 +24,7 @@
             :items="campusGenerations"
             item-title="generation"
             item-value="id"
-            :rules="[(v) => !!v || 'Generación es requerida']"
+            :rules="[(v: any) => !!v || 'Generación es requerida']"
             :disabled="!campusValid"
           ></v-select>
         </v-col>
@@ -50,7 +50,7 @@
     <template #[`item.userName`]="{ item }">
       {{ fullName(item?.userAttendance || undefined) }}
     </template>
-    <template #[`item.checkIn`]="{ item }">
+    <!-- <template #[`item.checkIn`]="{ item }">
       <div v-if="item.checkIn">
         {{ converTimestamp(item.checkIn) }}
       </div>
@@ -58,6 +58,14 @@
     <template #[`item.checkOut`]="{ item }">
       <div v-if="item.checkOut">
         {{ converTimestamp(item.checkOut) }}
+      </div>
+    </template> -->
+    <template #[`item.reason`]="{ item }">
+      <div v-if="item.reason === ReasonEmun.Other">
+        {{ item.descripcion }}
+      </div>
+      <div v-else>
+        {{ ReasonMap.get(item.reason)?.text }}
       </div>
     </template>
     <template #[`item.status`]="{ item }">
@@ -99,9 +107,9 @@ import VueDatePicker from "@vuepic/vue-datepicker"
 import dayjs from "dayjs"
 import { computed, onBeforeMount, PropType, ref, watch } from "vue"
 
-import { Attendance, CampusEnum, Generation, User } from "@/grapqhl"
+import { Attendance, CampusEnum, Generation, ReasonEmun, User } from "@/grapqhl"
 
-import { CampusOption } from "../../../constants"
+import { CampusOption, ReasonMap } from "../../../constants"
 import "@vuepic/vue-datepicker/dist/main.css"
 
 const props = defineProps({

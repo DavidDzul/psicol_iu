@@ -8,29 +8,38 @@
             <v-col cols="12" md="12">
               <v-text-field v-model="campusName" label="Sede" readonly></v-text-field>
             </v-col>
-            <v-col cols="12" md="12">
+            <v-col cols="12" md="6">
               <v-select v-model="generationId" label="Generación" item-title="generation" item-value="id" :items="generations" :disabled="!campusName"></v-select>
             </v-col>
-            <v-col cols="12" md="12">
+            <v-col cols="12" md="6">
               <v-select v-model="userId" v-bind="userIdProps" label="Becario" item-title="firstName" item-value="id" :items="filterStudens" :disabled="!generationId"></v-select>
             </v-col>
             <v-col cols="12" md="12">
+              <label>Seleccione una fecha:</label>
               <VueDatePicker v-model="dateData" auto-apply :enable-time-picker="false"></VueDatePicker>
             </v-col>
-            <v-col cols="12" md="3">
-              <v-checkbox v-model="delay" v-bind="delayProps" label="Retardo" density="comfortable" :disabled="!!justifiedAbsence"></v-checkbox>
+            <!-- <v-col cols="12" md="12">
+              <v-menu v-model="fromDateMenu" :close-on-content-click="false" :close-on-back="true" max-width="400" min-width="200">
+                <template v-slot:activator="{ props }">
+                  <v-text-field label="Seleccione una fecha" prepend-icon="mdi-calendar" readonly :model-value="fromDateDisp" v-bind="props"></v-text-field>
+                </template>
+                <v-date-picker v-model="fromDateVal" no-title @update:model-value="getDate($event)" :hide-header="true"></v-date-picker>
+              </v-menu>
+            </v-col> -->
+            <v-col cols="12" md="">
+              <v-checkbox v-model="delay" v-bind="delayProps" label="Retardo" density="comfortable" :disabled="!!justifiedAbsence || !!justifiedDelay"></v-checkbox>
             </v-col>
             <v-col cols="12" md="4">
-              <v-checkbox v-model="justifiedDelay" v-bind="justifiedDelayProps" label="Retardo justificado" density="comfortable" :disabled="!!justifiedAbsence"></v-checkbox>
+              <v-checkbox v-model="justifiedDelay" v-bind="justifiedDelayProps" label="Retardo justificado" density="comfortable" :disabled="!!justifiedAbsence || !!delay"></v-checkbox>
             </v-col>
             <v-col cols="12" md="4">
-              <v-checkbox v-model="justifiedAbsence" v-bind="justifiedAbsenceProps" label="Falta justificada" density="comfortable" :disabled="!!justifiedDelay"></v-checkbox>
+              <v-checkbox v-model="justifiedAbsence" v-bind="justifiedAbsenceProps" label="Falta justificada" density="comfortable" :disabled="!!justifiedDelay || !!delay"></v-checkbox>
             </v-col>
             <v-col cols="12" md="12">
               <v-select v-model="reason" v-bind="reasonProps" label="Razón" item-title="text" item-value="value" :items="ReasonArray"></v-select>
             </v-col>
-            <v-col v-if="reason === ReasonEmun.Other">
-              <v-text-field v-model="descripcion" v-bind="descripcionProps" label="Descripción del motivo"></v-text-field>
+            <v-col>
+              <v-text-field v-model="descripcion" v-bind="descripcionProps" label="Descripción del motivo" :disabled="reason === ReasonEmun.Other ? false : true"></v-text-field>
             </v-col>
           </v-row>
         </v-card-text>
@@ -47,6 +56,7 @@
 <script setup lang="ts">
 import { toTypedSchema } from "@vee-validate/yup"
 import VueDatePicker from "@vuepic/vue-datepicker"
+import dayjs from "dayjs"
 import { PublicPathState, useForm } from "vee-validate"
 import { computed, PropType, ref, watch } from "vue"
 import * as yup from "yup"
@@ -55,6 +65,7 @@ import { CampusEnum, CreateAttendanceInput, Generation, ReasonEmun, User } from 
 import * as validations from "@/validations"
 
 import { CampusTypeMap, ReasonArray } from "../../../constants"
+
 import "@vuepic/vue-datepicker/dist/main.css"
 
 const vuetifyConfig = (state: PublicPathState) => ({
@@ -84,6 +95,8 @@ const [reason, reasonProps] = defineField("reason", vuetifyConfig)
 const [descripcion, descripcionProps] = defineField("descripcion", vuetifyConfig)
 const generationId = ref(undefined)
 const dateData = ref<string>("")
+const fromDateMenu = ref(false)
+const fromDateVal = ref(null)
 
 const props = defineProps({
   modelValue: { type: Boolean, default: () => false },
