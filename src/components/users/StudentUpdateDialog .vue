@@ -17,14 +17,17 @@
             <!-- <v-col cols="12" md="6">
               <v-select v-model="campus" label="Sede" item-title="text" item-value="value" :items="campusArray" readonly></v-select>
             </v-col> -->
-            <v-col cols="12" md="6">
+            <!-- <v-col cols="12" md="6">
               <v-text-field v-model="enrollment" label="Matrícula" readonly> </v-text-field>
-            </v-col>
+            </v-col> -->
             <v-col cols="12" md="6">
               <v-select v-model="role" v-bind="roleProps" label="Tipo de usuario" item-title="text" item-value="value" :items="RoleUserArray"></v-select>
             </v-col>
             <v-col cols="12" md="6">
               <v-phone-input v-model="phone" v-bind="phoneProps" label="Teléfono" validate-on="blur lazy"> </v-phone-input>
+            </v-col>
+            <v-col cols="12" md="6">
+              <v-checkbox v-model="active" v-bind="activeProps" label="Activo" density="comfortable"></v-checkbox>
             </v-col>
             <v-col cols="12" md="6">
               <v-text-field v-model="password" v-bind="passwordProps" label="Contraseña"></v-text-field>
@@ -71,6 +74,7 @@ const { defineField, meta, values, resetForm, setValues } = useForm<UpdateUserIn
       confirmation: validations.confirmation(),
       phone: validations.phone(),
       role: validations.role(),
+      active: validations.userActive(),
     }),
   ),
 })
@@ -81,6 +85,7 @@ const [phone, phoneProps] = defineField("phone")
 const [password, passwordProps] = defineField("password", vuetifyConfig)
 const [confirmation, confirmationProps] = defineField("confirmation", vuetifyConfig)
 const [role, roleProps] = defineField("role", vuetifyConfig)
+const [active, activeProps] = defineField("active", vuetifyConfig)
 const enrollment = ref("")
 const campus = ref("")
 
@@ -108,6 +113,7 @@ watch(
         phone: value.phone,
         email: value.email,
         role: value.role,
+        active: value.active,
       })
     } else {
       resetForm()

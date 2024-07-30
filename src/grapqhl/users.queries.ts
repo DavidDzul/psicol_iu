@@ -28,6 +28,7 @@ export const SEATCH_USERS = gql`
       enrollment
       role
       campus
+      active
     }
   }
 `
@@ -44,6 +45,7 @@ export const UPDATE_USER = gql`
       enrollment
       role
       campus
+      active
     }
   }
 `
@@ -60,6 +62,7 @@ export const GET_USER = gql`
       enrollment
       role
       campus
+      active
       images {
         id
         url

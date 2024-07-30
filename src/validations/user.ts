@@ -24,3 +24,9 @@ export const confirmation = () =>
 export const phone = () => yup.string().concat(optionalString).length(13, "").label("Teléfono")
 export const campus = () => yup.mixed<CampusEnum>().oneOf(Object.values(CampusEnum)).required().label("Sede")
 export const role = () => yup.mixed<RoleUser>().oneOf(Object.values(RoleUser)).required().label("Tipo de usuario")
+export const userActive = () =>
+  yup
+    .number()
+    .transform((value) => (isNaN(value) ? undefined : value))
+    .notRequired()
+    .label("Activo")

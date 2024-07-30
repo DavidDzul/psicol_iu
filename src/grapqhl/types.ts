@@ -34,13 +34,19 @@ export type User = {
   attendances?: Maybe<Attendance>
   photos?: Maybe<Array<Photo>>
   constancy?: Maybe<Array<Constancy>>
+  autorization?: Maybe<Array<Autorization>>
   attendanceMap?: Maybe<Array<Attendance>>
   images: Array<Photo>
   documents: Array<Constancy>
   lastConstancy?: Maybe<Constancy>
+  autorizationMonth?: Maybe<Autorization>
 }
 
 export type UserAttendanceMapArgs = {
+  date: Scalars["String"]
+}
+
+export type UserAutorizationMonthArgs = {
   date: Scalars["String"]
 }
 
@@ -131,6 +137,44 @@ export type Constancy = {
   createdAt: Scalars["String"]
 }
 
+export type Autorization = {
+  __typename?: "Autorization"
+  id: Scalars["Int"]
+  userId: Scalars["Int"]
+  status: StatusAutorizationEmun
+  percentage?: Maybe<Scalars["Int"]>
+  previousPayment: Scalars["Boolean"]
+  numberMonths?: Maybe<Scalars["Int"]>
+  previousMonths?: Maybe<Scalars["String"]>
+  cause?: Maybe<CauseEmun>
+  otherCause?: Maybe<Scalars["String"]>
+  date: Scalars["String"]
+  createdAt: Scalars["String"]
+  updatedAt: Scalars["String"]
+  user: User
+}
+
+export enum StatusAutorizationEmun {
+  Active = "ACTIVE",
+  Suspended = "SUSPENDED",
+  Graduate = "GRADUATE",
+  Detained = "DETAINED",
+}
+
+export enum CauseEmun {
+  FaultsFi = "FAULTS_FI",
+  NotConstancy = "NOT_CONSTANCY",
+  ProvisionalesGrades = "PROVISIONALES_GRADES",
+  OriginalGrades = "ORIGINAL_GRADES",
+  LowAverage = "LOW_AVERAGE",
+  Extraordinary = "EXTRAORDINARY",
+  PersonalProblemsSchool = "PERSONAL_PROBLEMS_SCHOOL",
+  VocationalProblemsSchool = "VOCATIONAL_PROBLEMS_SCHOOL",
+  Missing = "MISSING",
+  BreakRules = "BREAK_RULES",
+  Other = "OTHER",
+}
+
 export type Token = {
   __typename?: "Token"
   token: Scalars["String"]
@@ -155,6 +199,7 @@ export type QueryFindOneUserArgs = {
 
 export type Mutation = {
   __typename?: "Mutation"
+  createAutorization: Autorization
   createConstancy: Constancy
   removeConstancy: SuccessMessage
   createPhoto: Photo
@@ -169,6 +214,10 @@ export type Mutation = {
   createUser: User
   updateUser: User
   login: Token
+}
+
+export type MutationCreateAutorizationArgs = {
+  createAutorizationInput: CreateAutorizationInput
 }
 
 export type MutationCreateConstancyArgs = {
@@ -237,6 +286,17 @@ export type MutationLoginArgs = {
   password: Scalars["String"]
 }
 
+export type CreateAutorizationInput = {
+  userId: Scalars["Int"]
+  percentage: Scalars["Int"]
+  status: StatusAutorizationEmun
+  previousPayment?: Maybe<Scalars["Boolean"]>
+  numberMonths?: Maybe<Scalars["Int"]>
+  previousMonths?: Maybe<Scalars["String"]>
+  cause?: Maybe<CauseEmun>
+  otherCause?: Maybe<Scalars["String"]>
+}
+
 export type AttendanceInput = {
   enrollment: Scalars["String"]
 }
@@ -296,4 +356,5 @@ export type UpdateUserInput = {
   generationId?: Maybe<Scalars["Int"]>
   role?: Maybe<RoleUser>
   id: Scalars["Int"]
+  active?: Maybe<Scalars["Boolean"]>
 }

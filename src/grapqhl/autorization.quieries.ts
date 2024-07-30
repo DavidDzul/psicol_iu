@@ -27,6 +27,16 @@ export const GET_AUTORIZATION = gql`
         startDate
         endDate
       }
+      autorizationMonth(date: $date) {
+        id
+      }
+    }
+  }
+`
+export const CREATE_AUTORIZATION = gql`
+  mutation ($createAutorizationInput: CreateAutorizationInput!) {
+    createAutorization(createAutorizationInput: $createAutorizationInput) {
+      id
     }
   }
 `

@@ -44,7 +44,7 @@
       </v-toolbar>
     </template>
     <template #[`item.actions`]="{ item }">
-      <div style="width: 100%">
+      <div style="width: 100%" v-if="item.active">
         <v-tooltip location="bottom" text="Autorizar">
           <template v-slot:activator="{ props }">
             <v-btn
@@ -55,9 +55,16 @@
               icon="mdi-account-check"
               class="mr-2"
               :disabled="validateLastConstancy(item.documents || []) ? false : true"
-              @click="$emit('edit', item.id)"
+              @click="$emit('create', item.id)"
             >
             </v-btn>
+          </template>
+        </v-tooltip>
+      </div>
+      <div style="width: 100%" v-else>
+        <v-tooltip location="bottom" text="Usuario de baja">
+          <template v-slot:activator="{ props }">
+            <v-btn v-bind="props" variant="text" color="red" density="comfortable" icon="mdi-account-remove" class="mr-2"> </v-btn>
           </template>
         </v-tooltip>
       </div>
@@ -86,8 +93,10 @@
           <div class="one-content">
             <div class="expanded-column">
               <span class="font-weight-medium">Constancia de estudios:</span>
-              <template v-if="validateLastConstancy(item.documents || [])"> <span style="color: green"> Válido</span> <v-icon color="success">mdi-check</v-icon> </template>
-              <template v-else> <span style="color: red"> Inválido</span> <v-icon color="error">mdi-close</v-icon> </template>
+              <template v-if="validateLastConstancy(item.documents || [])">
+                <span style="color: green"> Vigencia hasta el {{ item.documents[0].startDate }} </span>
+              </template>
+              <template v-else> <span style="color: red"> No vigente</span> </template>
             </div>
           </div>
         </td>
@@ -115,7 +124,7 @@ const props = defineProps({
 })
 
 const emit = defineEmits<{
-  create: []
+  create: [id: number]
   consult: [campus: CampusEnum, generation: number, date: string]
   edit: [id: number]
   remove: [id: number]

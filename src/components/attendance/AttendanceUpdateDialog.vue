@@ -14,17 +14,39 @@
             <v-col cols="12" md="6">
               <v-text-field v-model="checkOut" label="Salida" readonly></v-text-field>
             </v-col>
-            <v-col cols="12" md="3">
-              <v-checkbox v-model="delay" v-bind="delayProps" label="Retardo" density="comfortable" :disabled="!!justifiedAbsence || !!justifiedDelay"></v-checkbox>
+            <v-col cols="12" md="4">
+              <v-checkbox v-model="delay" v-bind="delayProps" label="Retardo" density="comfortable" :disabled="!!justifiedAbsence || !!justifiedDelay" @click="handleCheckboxChange"></v-checkbox>
             </v-col>
             <v-col cols="12" md="4">
-              <v-checkbox v-model="justifiedDelay" v-bind="justifiedDelayProps" label="Retardo justificado" density="comfortable" :disabled="!!justifiedAbsence || !!delay"></v-checkbox>
+              <v-checkbox
+                v-model="justifiedDelay"
+                v-bind="justifiedDelayProps"
+                label="Retardo justificado"
+                density="comfortable"
+                :disabled="!!justifiedAbsence || !!delay"
+                @click="handleCheckboxChange"
+              ></v-checkbox>
             </v-col>
             <v-col cols="12" md="4">
-              <v-checkbox v-model="justifiedAbsence" v-bind="justifiedAbsenceProps" label="Falta justificada" density="comfortable" :disabled="!!justifiedDelay || !!delay"></v-checkbox>
+              <v-checkbox
+                v-model="justifiedAbsence"
+                v-bind="justifiedAbsenceProps"
+                label="Falta justificada"
+                density="comfortable"
+                :disabled="!!justifiedDelay || !!delay"
+                @click="handleCheckboxChange"
+              ></v-checkbox>
             </v-col>
             <v-col cols="12" md="12">
-              <v-select v-model="reason" v-bind="reasonProps" label="Razón" item-title="text" item-value="value" :items="ReasonArray"></v-select>
+              <v-select
+                v-model="reason"
+                v-bind="reasonProps"
+                label="Razón"
+                item-title="text"
+                item-value="value"
+                :items="ReasonArray"
+                :disabled="delay || justifiedAbsence || justifiedDelay ? false : true"
+              ></v-select>
             </v-col>
             <v-col v-if="reason === ReasonEmun.Other">
               <v-text-field v-model="descripcion" v-bind="descripcionProps" label="Descripción del motivo"></v-text-field>
@@ -120,6 +142,11 @@ const save = () => {
   if (meta.value.valid) {
     emit("submit", values)
   }
+}
+
+const handleCheckboxChange = () => {
+  reason.value = null
+  descripcion.value = null
 }
 
 const converTimestamp = (value: string | undefined) => {

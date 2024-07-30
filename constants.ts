@@ -1,4 +1,4 @@
-import { CampusEnum, ReasonEmun, RoleUser } from "./src/grapqhl"
+import { CampusEnum, CauseEmun, ReasonEmun, RoleUser, StatusAutorizationEmun } from "./src/grapqhl"
 
 export const FILE_URL = import.meta.env.VITE_FILES_URL
 
@@ -78,3 +78,23 @@ export const deletePhotoBody = (): string =>
   `¿Desea eliminar la foto de perfil de este usuario? Al realizar esta acción se eliminara la imagen seleccionada, y posteriormente podrá asignarle una nueva. ¿Desea continuar?`
 export const deleteConstancyTitle = "Eliminar Constancia de Estudios"
 export const deleteConstancyBody = (): string => `¿Desea eliminar la constancia de estudios seleccionada? Al realizar esta acción se eliminara el documento de manaera permanente. ¿Desea continuar?`
+
+export const statusAutorizationArray = [
+  { value: StatusAutorizationEmun.Active, text: "Activo" },
+  { value: StatusAutorizationEmun.Suspended, text: "Suspendido" },
+  { value: StatusAutorizationEmun.Graduate, text: "Egresado" },
+  { value: StatusAutorizationEmun.Detained, text: "Beca Retenida" },
+]
+export const causeArray = [
+  { value: CauseEmun.BreakRules, text: "FALTAS AL REGLAMENTO AL NO COMENTAR UN ASPECTO TRASCENDENTAL" },
+  { value: CauseEmun.Extraordinary, text: "POR LLEVARSE A EXTRAORDINARIO" },
+  { value: CauseEmun.FaultsFi, text: "FALTAS A F.I." },
+  { value: CauseEmun.LowAverage, text: "BAJO PROMEDIO" },
+  { value: CauseEmun.Missing, text: "DESAPARECIÓ SIN AVISAR" },
+  { value: CauseEmun.NotConstancy, text: "NO ENTREGÓ CONSTANCIA" },
+  { value: CauseEmun.OriginalGrades, text: "NO ENTREGÓ CALIFICACIONES ORIGINALES" },
+  { value: CauseEmun.PersonalProblemsSchool, text: "DEJÓ LA ESCUELA POR PROBLEMAS PERSONALES" },
+  { value: CauseEmun.ProvisionalesGrades, text: "NO ENTREGÓ CALIFICACIONES PROVICIONALES" },
+  { value: CauseEmun.VocationalProblemsSchool, text: "DEJÓ LA ESCUELA POR FALTA DE ORIENTACIÓN VOCACIONAL" },
+  { value: CauseEmun.Other, text: "OTRO" },
+]

@@ -8,10 +8,10 @@
             <v-col cols="12" md="12">
               <v-text-field v-model="campusName" label="Sede" readonly></v-text-field>
             </v-col>
-            <v-col cols="12" md="6">
+            <v-col cols="12" md="12">
               <v-select v-model="generationId" label="Generación" item-title="generation" item-value="id" :items="generations" :disabled="!campusName"></v-select>
             </v-col>
-            <v-col cols="12" md="6">
+            <v-col cols="12" md="12">
               <v-select v-model="userId" v-bind="userIdProps" label="Becario" item-title="firstName" item-value="id" :items="filterStudens" :disabled="!generationId"></v-select>
             </v-col>
             <v-col cols="12" md="12">
@@ -26,7 +26,8 @@
                 <v-date-picker v-model="fromDateVal" no-title @update:model-value="getDate($event)" :hide-header="true"></v-date-picker>
               </v-menu>
             </v-col> -->
-            <v-col cols="12" md="">
+
+            <v-col cols="12" md="4">
               <v-checkbox v-model="delay" v-bind="delayProps" label="Retardo" density="comfortable" :disabled="!!justifiedAbsence || !!justifiedDelay"></v-checkbox>
             </v-col>
             <v-col cols="12" md="4">
@@ -36,7 +37,15 @@
               <v-checkbox v-model="justifiedAbsence" v-bind="justifiedAbsenceProps" label="Falta justificada" density="comfortable" :disabled="!!justifiedDelay || !!delay"></v-checkbox>
             </v-col>
             <v-col cols="12" md="12">
-              <v-select v-model="reason" v-bind="reasonProps" label="Razón" item-title="text" item-value="value" :items="ReasonArray"></v-select>
+              <v-select
+                v-model="reason"
+                v-bind="reasonProps"
+                label="Razón"
+                item-title="text"
+                item-value="value"
+                :items="ReasonArray"
+                :disabled="delay || justifiedAbsence || justifiedDelay ? false : true"
+              ></v-select>
             </v-col>
             <v-col>
               <v-text-field v-model="descripcion" v-bind="descripcionProps" label="Descripción del motivo" :disabled="reason === ReasonEmun.Other ? false : true"></v-text-field>
@@ -142,6 +151,14 @@ watch(
         date: value,
       })
     }
+  },
+)
+
+watch(
+  () => delay.value || justifiedAbsence.value || justifiedDelay.value,
+  () => {
+    reason.value = null
+    descripcion.value = null
   },
 )
 
