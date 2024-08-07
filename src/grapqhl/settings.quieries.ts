@@ -4,7 +4,7 @@ export const CREATE_GENERATION = gql`
   mutation ($createGenerationInput: CreateGenerationInput!) {
     createGeneration(createGenerationInput: $createGenerationInput) {
       id
-      generation
+      entryName
       inProgress
       campus
     }
@@ -14,7 +14,7 @@ export const GET_GENERATIONS = gql`
   query getGenerations {
     findAllGenerations {
       id
-      generation
+      entryName
       inProgress
       campus
     }
@@ -24,7 +24,7 @@ export const UPDATE_GENERATION = gql`
   mutation ($updateGenerationInput: UpdateGenerationInput!) {
     updateGeneration(updateGenerationInput: $updateGenerationInput) {
       id
-      generation
+      entryName
       inProgress
       campus
     }

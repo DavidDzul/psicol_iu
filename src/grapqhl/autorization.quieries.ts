@@ -13,11 +13,10 @@ export const GET_AUTORIZATION = gql`
       active
       campus
       generationId
-      attendanceMap(date: $date) {
+      attendanceMap {
         id
         userId
-        checkIn
-        checkOut
+        recordDate
         delay
         justifiedDelay
         justifiedAbsence
@@ -29,6 +28,13 @@ export const GET_AUTORIZATION = gql`
       }
       autorizationMonth(date: $date) {
         id
+        status
+        previousPayment
+        numberMonths
+        previousMonths
+        cause
+        otherCause
+        percentage
       }
     }
   }
@@ -37,6 +43,13 @@ export const CREATE_AUTORIZATION = gql`
   mutation ($createAutorizationInput: CreateAutorizationInput!) {
     createAutorization(createAutorizationInput: $createAutorizationInput) {
       id
+      status
+      previousPayment
+      numberMonths
+      previousMonths
+      cause
+      otherCause
+      percentage
     }
   }
 `

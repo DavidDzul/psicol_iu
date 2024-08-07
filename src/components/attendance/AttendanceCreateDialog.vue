@@ -1,40 +1,43 @@
 <template>
-  <v-dialog :model-value="modelValue" @update:model-value="$emit('update:modelValue', $event)" max-width="700px" @keydown.stop.esc="close" :persistent="true">
+  <v-dialog :model-value="modelValue" @update:model-value="$emit('update:modelValue', $event)" max-width="800px" @keydown.stop.esc="close" :persistent="true">
     <v-card>
       <v-form>
         <v-card-title> Generar Asistencia </v-card-title>
         <v-card-text>
           <v-row>
-            <v-col cols="12" md="12">
+            <v-col cols="12" md="6">
               <v-text-field v-model="campusName" label="Sede" readonly></v-text-field>
             </v-col>
-            <v-col cols="12" md="12">
-              <v-select v-model="generationId" label="Generación" item-title="generation" item-value="id" :items="generations" :disabled="!campusName"></v-select>
+            <v-col cols="12" md="6">
+              <v-select v-model="generationId" label="Generación" item-title="entryName" item-value="id" :items="filterGenerations" :disabled="!campusName"></v-select>
             </v-col>
-            <v-col cols="12" md="12">
+            <v-col cols="12" md="6">
               <v-select v-model="userId" v-bind="userIdProps" label="Becario" item-title="firstName" item-value="id" :items="filterStudens" :disabled="!generationId"></v-select>
             </v-col>
-            <v-col cols="12" md="12">
+            <!-- <v-col cols="12" md="12">
               <label>Seleccione una fecha:</label>
               <VueDatePicker v-model="dateData" auto-apply :enable-time-picker="false"></VueDatePicker>
-            </v-col>
-            <!-- <v-col cols="12" md="12">
+            </v-col> -->
+            <v-col cols="12" md="6">
               <v-menu v-model="fromDateMenu" :close-on-content-click="false" :close-on-back="true" max-width="400" min-width="200">
                 <template v-slot:activator="{ props }">
-                  <v-text-field label="Seleccione una fecha" prepend-icon="mdi-calendar" readonly :model-value="fromDateDisp" v-bind="props"></v-text-field>
+                  <v-text-field label="Seleccione una fecha" readonly :model-value="fromDateDisp" v-bind="props"></v-text-field>
                 </template>
                 <v-date-picker v-model="fromDateVal" no-title @update:model-value="getDate($event)" :hide-header="true"></v-date-picker>
               </v-menu>
-            </v-col> -->
+            </v-col>
 
-            <v-col cols="12" md="4">
-              <v-checkbox v-model="delay" v-bind="delayProps" label="Retardo" density="comfortable" :disabled="!!justifiedAbsence || !!justifiedDelay"></v-checkbox>
+            <v-col cols="12" md="12" style="padding-top: 0">
+              <h3>Estado de asistencia:</h3>
             </v-col>
-            <v-col cols="12" md="4">
-              <v-checkbox v-model="justifiedDelay" v-bind="justifiedDelayProps" label="Retardo justificado" density="comfortable" :disabled="!!justifiedAbsence || !!delay"></v-checkbox>
+            <v-col cols="12" md="12" class="py-0">
+              <v-checkbox v-model="delay" v-bind="delayProps" label="RETARDO" density="comfortable" :disabled="!!justifiedAbsence || !!justifiedDelay"></v-checkbox>
             </v-col>
-            <v-col cols="12" md="4">
-              <v-checkbox v-model="justifiedAbsence" v-bind="justifiedAbsenceProps" label="Falta justificada" density="comfortable" :disabled="!!justifiedDelay || !!delay"></v-checkbox>
+            <v-col cols="12" md="12" class="py-0">
+              <v-checkbox v-model="justifiedDelay" v-bind="justifiedDelayProps" label="RETARDO JUSTIFICADO" density="comfortable" :disabled="!!justifiedAbsence || !!delay"></v-checkbox>
+            </v-col>
+            <v-col cols="12" md="12" class="py-0">
+              <v-checkbox v-model="justifiedAbsence" v-bind="justifiedAbsenceProps" label="FALTA JUSTIFICADA" density="comfortable" :disabled="!!justifiedDelay || !!delay"></v-checkbox>
             </v-col>
             <v-col cols="12" md="12">
               <v-select
@@ -70,7 +73,7 @@ import { PublicPathState, useForm } from "vee-validate"
 import { computed, PropType, ref, watch } from "vue"
 import * as yup from "yup"
 
-import { CampusEnum, CreateAttendanceInput, Generation, ReasonEmun, User } from "@/grapqhl"
+import { Admin, CampusEnum, CreateAttendanceInput, Generation, ReasonEmun, User } from "@/grapqhl"
 import * as validations from "@/validations"
 
 import { CampusTypeMap, ReasonArray } from "../../../constants"
@@ -106,6 +109,7 @@ const generationId = ref(undefined)
 const dateData = ref<string>("")
 const fromDateMenu = ref(false)
 const fromDateVal = ref(null)
+const fromDateDisp = ref("")
 
 const props = defineProps({
   modelValue: { type: Boolean, default: () => false },
@@ -144,7 +148,7 @@ watch(
 )
 
 watch(
-  () => dateData.value,
+  () => fromDateVal.value,
   (value) => {
     if (value) {
       setValues({
@@ -163,6 +167,7 @@ watch(
 )
 
 const close = () => {
+  fromDateDisp.value = ""
   emit("update:modelValue", false)
 }
 
@@ -171,4 +176,19 @@ const save = () => {
     emit("submit", values)
   }
 }
+
+const getDate = (date: any) => {
+  fromDateVal.value = date
+  fromDateMenu.value = false
+  const formatDate = dayjs(fromDateVal.value)
+  fromDateDisp.value = formatDate.format("DD/MM/YYYY")
+}
+
+const filterGenerations = computed(() => {
+  if (props.generations) {
+    const result = props.generations.filter((map) => map.campus === props.campus)
+    return result
+  }
+  return []
+})
 </script>

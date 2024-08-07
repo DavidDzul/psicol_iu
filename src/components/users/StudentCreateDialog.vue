@@ -18,7 +18,7 @@
               <v-select v-model="campus" v-bind="campusProps" label="Sede" item-title="text" item-value="value" :items="campusArray"></v-select>
             </v-col>
             <v-col cols="12" md="6">
-              <v-select v-model="generationId" v-bind="generationIdProps" label="Generación" item-title="generation" item-value="id" :items="campusGenerations" :disabled="!campus"></v-select>
+              <v-select v-model="generationId" v-bind="generationIdProps" label="Generación" item-title="entryName" item-value="id" :items="campusGenerations" :disabled="!campus"></v-select>
             </v-col>
             <v-col cols="12" md="6">
               <v-text-field v-model="enrollment" v-bind="enrollmentProps" label="Matrícula"> </v-text-field>

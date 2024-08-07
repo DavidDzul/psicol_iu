@@ -6,7 +6,7 @@
         <v-card-text>
           <v-row>
             <v-col cols="12" md="12">
-              <v-text-field v-model.number="generation" v-bind="generationProps" label="Número de la generación"></v-text-field>
+              <v-text-field v-model.number="entryName" v-bind="entryNameProps" label="Número de la generación"></v-text-field>
             </v-col>
             <v-col cols="12" md="12">
               <v-select v-model="campus" v-bind="campusProps" label="Sede" item-title="text" item-value="value" :items="campusArray"></v-select>
@@ -45,13 +45,13 @@ const vuetifyConfig = (state: PublicPathState) => ({
 const { defineField, meta, values, resetForm, setValues } = useForm<UpdateGenerationInput>({
   validationSchema: toTypedSchema(
     yup.object({
-      generation: validations.generation(),
+      entryName: validations.generation(),
       inProgress: validations.active(),
       campus: validations.campus(),
     }),
   ),
 })
-const [generation, generationProps] = defineField("generation", vuetifyConfig)
+const [entryName, entryNameProps] = defineField("entryName", vuetifyConfig)
 const [inProgress, inProgressProps] = defineField("inProgress", vuetifyConfig)
 const [campus, campusProps] = defineField("campus", vuetifyConfig)
 
@@ -67,7 +67,7 @@ watch(
   (value) => {
     if (value) {
       setValues({
-        generation: value.generation,
+        entryName: value.entryName,
         campus: value.campus,
         inProgress: value.inProgress,
       })

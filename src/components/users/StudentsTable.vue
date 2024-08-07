@@ -14,19 +14,10 @@
     <v-card-text style="padding: 5px">
       <v-row class="mx-auto">
         <v-col cols="3">
-          <v-select v-model="campusData" density="compact" label="Sede" :items="campusArray" item-title="text" item-value="value" :rules="[(v) => !!v || 'Sede es requerida']"></v-select>
+          <v-select v-model="campusData" density="compact" label="Sede" :items="campusArray" item-title="text" item-value="value"></v-select>
         </v-col>
         <v-col cols="3">
-          <v-select
-            v-model="generationData"
-            density="compact"
-            label="Generación"
-            :items="campusGenerations"
-            item-title="generation"
-            item-value="id"
-            :rules="[(v) => !!v || 'Generación es requerida']"
-            :disabled="!campusValid"
-          ></v-select>
+          <v-select v-model="generationData" density="compact" label="Generación" :items="campusGenerations" item-title="entryName" item-value="id" :disabled="!campusValid"></v-select>
         </v-col>
         <v-col class="align-center" cols="6">
           <v-btn color="grey" :disabled="!isFormValid" :loading="loading" class="mr-2" prepend-icon="mdi-magnify" @click="consultData">BUSCAR</v-btn>
@@ -171,11 +162,11 @@ const consultData = () => {
   }
 }
 
-const getGeneration = (value: number) => {
-  const find = props.generations.find((map) => map.id === value)
-  if (find) {
-    return "- G" + find.generation
-  }
-  return null
-}
+// const getGeneration = (value: number) => {
+//   const find = props.generations.find((map) => map.id === value)
+//   if (find) {
+//     return "- G" + find.generation
+//   }
+//   return null
+// }
 </script>

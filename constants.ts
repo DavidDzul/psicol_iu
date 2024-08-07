@@ -78,6 +78,8 @@ export const deletePhotoBody = (): string =>
   `¿Desea eliminar la foto de perfil de este usuario? Al realizar esta acción se eliminara la imagen seleccionada, y posteriormente podrá asignarle una nueva. ¿Desea continuar?`
 export const deleteConstancyTitle = "Eliminar Constancia de Estudios"
 export const deleteConstancyBody = (): string => `¿Desea eliminar la constancia de estudios seleccionada? Al realizar esta acción se eliminara el documento de manaera permanente. ¿Desea continuar?`
+export const deleteCalendarTitle = "Eliminar Fecha"
+export const deleteCalendarBody = (): string => `¿Desea eliminar la fecha seleccionada? Al realizar esta acción se eliminara de manaera permanente. ¿Desea continuar?`
 
 export const statusAutorizationArray = [
   { value: StatusAutorizationEmun.Active, text: "Activo" },

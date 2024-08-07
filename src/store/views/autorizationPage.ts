@@ -1,14 +1,18 @@
+import dayjs from "dayjs"
 import { defineStore, storeToRefs } from "pinia"
 import { computed, ref } from "vue"
 
 import { CampusEnum, CreateAutorizationInput } from "@/grapqhl"
 import { useAuthStore } from "@/store/api/authStore"
 import { useAutorizationStore } from "@/store/api/autorizationStore"
+import { useCalendarStore } from "@/store/api/calendarStore"
 import { useSettingsStore } from "@/store/api/settingsStore"
 
 export const useAutorizationPageStore = defineStore("autorizationPage", () => {
   const { adminCampus } = storeToRefs(useAuthStore())
   const { loadingGenerations, generationsMap } = storeToRefs(useSettingsStore())
+  const { loadingCalendar, calendarMap } = storeToRefs(useCalendarStore())
+
   const { autorizationMap, loadingCreateAutorization } = storeToRefs(useAutorizationStore())
   const { mutateAutorizationMap, mutateCreateAutorization } = useAutorizationStore()
   const variables = ref<{ campus: CampusEnum | undefined; generation: number | undefined; date: string }>({
@@ -18,10 +22,22 @@ export const useAutorizationPageStore = defineStore("autorizationPage", () => {
   })
 
   const loading = computed(() => loadingGenerations.value)
+  const loadCalendar = computed(() => loadingCalendar.value)
+
+  const calendars = computed(() => [...calendarMap.value.values()])
   const autorization = computed(() => [...autorizationMap.value.values()])
   const generations = computed(() => [...generationsMap.value.values()])
   const createDialog = ref(false)
   const selectedUser = ref(0)
+
+  // const calendarRange = computed(() => {
+  //   const referenceDate = dayjs(variables.value.date)
+  //   const filteredEvents = calendars.value.filter((event) => {
+  //     const eventDate = dayjs(event.date)
+  //     return eventDate.year() === referenceDate.year() && eventDate.month() === referenceDate.month()
+  //   })
+  //   return filteredEvents
+  // })
 
   const links = computed(() => [
     {
@@ -69,9 +85,11 @@ export const useAutorizationPageStore = defineStore("autorizationPage", () => {
   return {
     links,
     loading,
+    calendars,
     variables,
     generations,
     adminCampus,
+    loadCalendar,
     autorization,
     createDialog,
     onConsult,

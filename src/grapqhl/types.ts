@@ -26,11 +26,11 @@ export type User = {
   phone?: Maybe<Scalars["String"]>
   active: Scalars["Boolean"]
   campus: CampusEnum
-  generationId?: Maybe<Scalars["Float"]>
+  generationId: Scalars["Int"]
   role: RoleUser
   createdAt: Scalars["String"]
   updatedAt: Scalars["String"]
-  generation?: Maybe<Generation>
+  generation: Generation
   attendances?: Maybe<Attendance>
   photos?: Maybe<Array<Photo>>
   constancy?: Maybe<Array<Constancy>>
@@ -40,10 +40,6 @@ export type User = {
   documents: Array<Constancy>
   lastConstancy?: Maybe<Constancy>
   autorizationMonth?: Maybe<Autorization>
-}
-
-export type UserAttendanceMapArgs = {
-  date: Scalars["String"]
 }
 
 export type UserAutorizationMonthArgs = {
@@ -84,12 +80,13 @@ export enum RoleEnum {
 export type Generation = {
   __typename?: "Generation"
   id: Scalars["Int"]
-  generation: Scalars["Int"]
+  entryName: Scalars["Int"]
   campus: CampusEnum
   inProgress: Scalars["Boolean"]
   createdAt: Scalars["String"]
   updatedAt: Scalars["String"]
   users: Array<User>
+  calendar: Array<Calendar>
 }
 
 export type Attendance = {
@@ -175,6 +172,18 @@ export enum CauseEmun {
   Other = "OTHER",
 }
 
+export type Calendar = {
+  __typename?: "Calendar"
+  id: Scalars["Int"]
+  name: Scalars["String"]
+  generationId: Scalars["Int"]
+  date: Scalars["String"]
+  campus: CampusEnum
+  createdAt: Scalars["String"]
+  updatedAt: Scalars["String"]
+  generation: Generation
+}
+
 export type Token = {
   __typename?: "Token"
   token: Scalars["String"]
@@ -187,6 +196,7 @@ export type SuccessMessage = {
 
 export type Query = {
   __typename?: "Query"
+  findAllCalendar: Array<Calendar>
   findAllGenerations: Array<Generation>
   findOneUser: User
   findAllUsers: Array<User>
@@ -199,6 +209,9 @@ export type QueryFindOneUserArgs = {
 
 export type Mutation = {
   __typename?: "Mutation"
+  createCalendar: Calendar
+  updateCalendar: Calendar
+  removeCalendar: SuccessMessage
   createAutorization: Autorization
   createConstancy: Constancy
   removeConstancy: SuccessMessage
@@ -214,6 +227,18 @@ export type Mutation = {
   createUser: User
   updateUser: User
   login: Token
+}
+
+export type MutationCreateCalendarArgs = {
+  createCalendarInput: CreateCalendarInput
+}
+
+export type MutationUpdateCalendarArgs = {
+  updateCalendarInput: UpdateCalendarInput
+}
+
+export type MutationRemoveCalendarArgs = {
+  id: Scalars["Int"]
 }
 
 export type MutationCreateAutorizationArgs = {
@@ -286,6 +311,19 @@ export type MutationLoginArgs = {
   password: Scalars["String"]
 }
 
+export type CreateCalendarInput = {
+  name: Scalars["String"]
+  generationId: Scalars["Int"]
+  date: Scalars["String"]
+}
+
+export type UpdateCalendarInput = {
+  name?: Maybe<Scalars["String"]>
+  generationId?: Maybe<Scalars["Int"]>
+  date?: Maybe<Scalars["String"]>
+  id: Scalars["Int"]
+}
+
 export type CreateAutorizationInput = {
   userId: Scalars["Int"]
   percentage: Scalars["Int"]
@@ -323,13 +361,13 @@ export type UpdateAttendanceInput = {
 }
 
 export type CreateGenerationInput = {
-  generation: Scalars["Int"]
+  entryName: Scalars["Int"]
   inProgress: Scalars["Boolean"]
   campus: CampusEnum
 }
 
 export type UpdateGenerationInput = {
-  generation?: Maybe<Scalars["Int"]>
+  entryName?: Maybe<Scalars["Int"]>
   inProgress?: Maybe<Scalars["Boolean"]>
   campus?: Maybe<CampusEnum>
   id: Scalars["Int"]

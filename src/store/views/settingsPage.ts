@@ -78,6 +78,7 @@ export const useSettingsPageStore = defineStore("settingsPage", () => {
     editGeneration,
     createGenerationDialog,
     updateGenerationDialog,
+    generationsMap,
     links,
     settingsState,
     loadGenerations,

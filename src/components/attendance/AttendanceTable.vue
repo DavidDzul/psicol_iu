@@ -22,14 +22,22 @@
             density="compact"
             label="Generación"
             :items="campusGenerations"
-            item-title="generation"
+            item-title="entryName"
             item-value="id"
             :rules="[(v: any) => !!v || 'Generación es requerida']"
             :disabled="!campusValid"
           ></v-select>
         </v-col>
-        <v-col cols="3">
+        <!-- <v-col cols="3">
           <VueDatePicker v-model="dateData" auto-apply :enable-time-picker="false" :disabled="!generationData"></VueDatePicker>
+        </v-col> -->
+        <v-col cols="3">
+          <v-menu v-model="fromDateMenu" :close-on-content-click="false" :close-on-back="true" max-width="400" min-width="200">
+            <template v-slot:activator="{ props }">
+              <v-text-field density="compact" label="Seleccione una fecha" readonly :model-value="fromDateDisp" v-bind="props"></v-text-field>
+            </template>
+            <v-date-picker v-model="fromDateVal" no-title @update:model-value="getDate($event)" :hide-header="true"></v-date-picker>
+          </v-menu>
         </v-col>
         <v-col class="align-center" cols="3">
           <v-btn color="grey" :disabled="!isFormValid" :loading="loading" class="mr-2" prepend-icon="mdi-magnify" @click="consultData">BUSCAR</v-btn>
@@ -133,14 +141,18 @@ const emit = defineEmits<{
 const search = ref("")
 const campusData = ref<CampusEnum | null>(null)
 const generationData = ref<number | null>(null)
-const dateData = ref<string>("")
+const fromDateMenu = ref(false)
+const fromDateVal = ref(null)
+const fromDateDisp = ref("")
 
 const campusValid = computed(() => {
   return campusData.value
 })
+
 const isFormValid = computed(() => {
-  return campusData.value && generationData.value && dateData.value
+  return campusData.value && generationData.value && fromDateDisp.value
 })
+
 const campusGenerations = computed(() => {
   return props.generations.filter((map) => map.campus === campusData.value)
 })
@@ -188,21 +200,21 @@ onBeforeMount(() => {
   campusData.value = props.variables?.campus || null
   setTimeout(() => {
     generationData.value = props.variables?.generation || null
-    dateData.value = props.variables?.date || ""
+    fromDateDisp.value = props.variables?.date ? dayjs(props.variables?.date).format("DD/MM/YYYY") : ""
   }, 100)
 })
 
 const consultData = () => {
-  if (campusData.value && generationData.value) {
-    emit("consult", campusData.value, generationData.value, dateData.value)
+  if (campusData.value && generationData.value && fromDateVal.value) {
+    emit("consult", campusData.value, generationData.value, fromDateVal.value)
   }
 }
 
-const converTimestamp = (value: string) => {
-  const timestamp = parseInt(value, 10)
-  const date = dayjs(timestamp).add(1, "hour")
-  const formattedDate = date.format("DD/MM/YYYY HH:mm:ss")
-  return formattedDate
+const getDate = (date: any) => {
+  if (!fromDateVal.value) return ""
+  fromDateVal.value = date
+  fromDateDisp.value = dayjs(fromDateVal.value).format("DD/MM/YYYY")
+  fromDateMenu.value = false
 }
 
 const fullName = (user: User | undefined) => {

@@ -14,24 +14,27 @@
             <v-col cols="12" md="6">
               <v-text-field v-model="checkOut" label="Salida" readonly></v-text-field>
             </v-col>
-            <v-col cols="12" md="4">
-              <v-checkbox v-model="delay" v-bind="delayProps" label="Retardo" density="comfortable" :disabled="!!justifiedAbsence || !!justifiedDelay" @click="handleCheckboxChange"></v-checkbox>
+            <v-col cols="12" md="12" style="padding-top: 0">
+              <h3>Estado de asistencia:</h3>
             </v-col>
-            <v-col cols="12" md="4">
+            <v-col cols="12" md="12" class="py-0">
+              <v-checkbox v-model="delay" v-bind="delayProps" label="RETARDO" density="comfortable" :disabled="!!justifiedAbsence || !!justifiedDelay" @click="handleCheckboxChange"></v-checkbox>
+            </v-col>
+            <v-col cols="12" md="12" class="py-0">
               <v-checkbox
                 v-model="justifiedDelay"
                 v-bind="justifiedDelayProps"
-                label="Retardo justificado"
+                label="RETARDO JUSTIFICADO"
                 density="comfortable"
                 :disabled="!!justifiedAbsence || !!delay"
                 @click="handleCheckboxChange"
               ></v-checkbox>
             </v-col>
-            <v-col cols="12" md="4">
+            <v-col cols="12" md="12" class="py-0">
               <v-checkbox
                 v-model="justifiedAbsence"
                 v-bind="justifiedAbsenceProps"
-                label="Falta justificada"
+                label="FALTA JUSTIFICADA"
                 density="comfortable"
                 :disabled="!!justifiedDelay || !!delay"
                 @click="handleCheckboxChange"
