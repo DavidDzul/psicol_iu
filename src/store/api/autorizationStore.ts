@@ -41,6 +41,33 @@ export const useAutorizationStore = defineStore("autorizationStore", () => {
     console.error(err)
   })
 
+  onDoneCreateAutorization((res) => {
+    if (res?.data?.createAutorization) {
+      showAlert({
+        title: "Autorización creada exitosamente.",
+        status: "success",
+      })
+
+      const newAuthorization = res.data.createAutorization
+      const userId = newAuthorization.userId
+      const userFound = autorizationMap.value.get(userId)
+      if (userFound) {
+        autorizationMap.value.set(userId, {
+          ...userFound,
+          autorizationMonth: [...(userFound.autorizationMonth || []), newAuthorization],
+        })
+      }
+    }
+  })
+
+  onErrorCreateAutorization((err) => {
+    showAlert({
+      title: "Error al crear la autorización. Intente más tarde.",
+      status: "error",
+    })
+    console.error(err)
+  })
+
   return {
     autorizationMap,
     loadingAutorizationMap,

@@ -100,3 +100,18 @@ export const causeArray = [
   { value: CauseEmun.VocationalProblemsSchool, text: "DEJÓ LA ESCUELA POR FALTA DE ORIENTACIÓN VOCACIONAL" },
   { value: CauseEmun.Other, text: "OTRO" },
 ]
+
+export const MonthsMap = new Map([
+  [1, { value: 1, text: "ENERO" }],
+  [2, { value: 2, text: "FEBRERO" }],
+  [3, { value: 3, text: "MARZO" }],
+  [4, { value: 4, text: "ABRIL" }],
+  [5, { value: 5, text: "MAYO" }],
+  [6, { value: 6, text: "JUNIO" }],
+  [7, { value: 7, text: "JULIO" }],
+  [8, { value: 8, text: "AGOSTO" }],
+  [9, { value: 9, text: "SEPTIEMBRE" }],
+  [10, { value: 10, text: "OCTUBRE" }],
+  [11, { value: 11, text: "NOVIEMBRE" }],
+  [12, { value: 12, text: "DICIEMBRE" }],
+])

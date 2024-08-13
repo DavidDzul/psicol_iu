@@ -39,7 +39,7 @@ export type User = {
   images: Array<Photo>
   documents: Array<Constancy>
   lastConstancy?: Maybe<Constancy>
-  autorizationMonth?: Maybe<Autorization>
+  autorizationMonth?: Maybe<Array<Autorization>>
 }
 
 export type UserAutorizationMonthArgs = {

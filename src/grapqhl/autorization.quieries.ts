@@ -35,6 +35,7 @@ export const GET_AUTORIZATION = gql`
         cause
         otherCause
         percentage
+        date
       }
     }
   }
@@ -43,6 +44,7 @@ export const CREATE_AUTORIZATION = gql`
   mutation ($createAutorizationInput: CreateAutorizationInput!) {
     createAutorization(createAutorizationInput: $createAutorizationInput) {
       id
+      userId
       status
       previousPayment
       numberMonths

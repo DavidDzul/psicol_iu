@@ -2,7 +2,7 @@ import dayjs from "dayjs"
 import { defineStore, storeToRefs } from "pinia"
 import { computed, ref } from "vue"
 
-import { CampusEnum, CreateAutorizationInput } from "@/grapqhl"
+import { CampusEnum, CreateAutorizationInput, StatusAutorizationEmun } from "@/grapqhl"
 import { useAuthStore } from "@/store/api/authStore"
 import { useAutorizationStore } from "@/store/api/autorizationStore"
 import { useCalendarStore } from "@/store/api/calendarStore"
@@ -82,6 +82,22 @@ export const useAutorizationPageStore = defineStore("autorizationPage", () => {
     }
   }
 
+  const fullAutorization = async (id: number) => {
+    const findUser = autorizationMap.value.get(id)
+    try {
+      if (findUser) {
+        const input = { userId: findUser.id, status: StatusAutorizationEmun.Active, percentage: 100 } as CreateAutorizationInput
+        const res = await mutateCreateAutorization({ createAutorizationInput: input })
+        if (res?.data?.createAutorization) {
+          createDialog.value = false
+          selectedUser.value = 0
+        }
+      }
+    } catch (e) {
+      console.error(e)
+    }
+  }
+
   return {
     links,
     loading,
@@ -94,6 +110,7 @@ export const useAutorizationPageStore = defineStore("autorizationPage", () => {
     createDialog,
     onConsult,
     openCreate,
+    fullAutorization,
     onCreateAutorization,
   }
 })
