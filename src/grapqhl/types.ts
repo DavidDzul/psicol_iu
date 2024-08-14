@@ -159,16 +159,16 @@ export enum StatusAutorizationEmun {
 }
 
 export enum CauseEmun {
-  FaultsFi = "FAULTS_FI",
-  NotConstancy = "NOT_CONSTANCY",
-  ProvisionalesGrades = "PROVISIONALES_GRADES",
-  OriginalGrades = "ORIGINAL_GRADES",
-  LowAverage = "LOW_AVERAGE",
+  Faults = "FAULTS",
+  Notconstancy = "NOTCONSTANCY",
+  Provgrades = "PROVGRADES",
+  Origrades = "ORIGRADES",
+  Lowaverage = "LOWAVERAGE",
   Extraordinary = "EXTRAORDINARY",
-  PersonalProblemsSchool = "PERSONAL_PROBLEMS_SCHOOL",
-  VocationalProblemsSchool = "VOCATIONAL_PROBLEMS_SCHOOL",
+  Personalschool = "PERSONALSCHOOL",
+  Vocationalschool = "VOCATIONALSCHOOL",
   Missing = "MISSING",
-  BreakRules = "BREAK_RULES",
+  Breakrules = "BREAKRULES",
   Other = "OTHER",
 }
 
@@ -213,6 +213,7 @@ export type Mutation = {
   updateCalendar: Calendar
   removeCalendar: SuccessMessage
   createAutorization: Autorization
+  updateAutorization: Autorization
   createConstancy: Constancy
   removeConstancy: SuccessMessage
   createPhoto: Photo
@@ -243,6 +244,10 @@ export type MutationRemoveCalendarArgs = {
 
 export type MutationCreateAutorizationArgs = {
   createAutorizationInput: CreateAutorizationInput
+}
+
+export type MutationUpdateAutorizationArgs = {
+  updateAutorizationInput: UpdateAutorizationInput
 }
 
 export type MutationCreateConstancyArgs = {
@@ -333,6 +338,20 @@ export type CreateAutorizationInput = {
   previousMonths?: Maybe<Scalars["String"]>
   cause?: Maybe<CauseEmun>
   otherCause?: Maybe<Scalars["String"]>
+  date: Scalars["String"]
+}
+
+export type UpdateAutorizationInput = {
+  userId?: Maybe<Scalars["Int"]>
+  percentage?: Maybe<Scalars["Int"]>
+  status?: Maybe<StatusAutorizationEmun>
+  previousPayment?: Maybe<Scalars["Boolean"]>
+  numberMonths?: Maybe<Scalars["Int"]>
+  previousMonths?: Maybe<Scalars["String"]>
+  cause?: Maybe<CauseEmun>
+  otherCause?: Maybe<Scalars["String"]>
+  date?: Maybe<Scalars["String"]>
+  id: Scalars["Int"]
 }
 
 export type AttendanceInput = {

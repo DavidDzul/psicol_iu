@@ -68,6 +68,13 @@ export const ReasonMap = new Map([
   ],
 ])
 
+export const statusAutorizationMap = new Map([
+  [StatusAutorizationEmun.Active, { value: StatusAutorizationEmun.Active, text: "Activo" }],
+  [StatusAutorizationEmun.Suspended, { value: StatusAutorizationEmun.Suspended, text: "Suspendido" }],
+  [StatusAutorizationEmun.Graduate, { value: StatusAutorizationEmun.Graduate, text: "Egresado" }],
+  [StatusAutorizationEmun.Detained, { value: StatusAutorizationEmun.Detained, text: "Beca Retenida" }],
+])
+
 export const RoleUserArray = [
   { value: RoleUser.Student, text: "Becario" },
   { value: RoleUser.Graduate, text: "Egresado" },
@@ -88,18 +95,32 @@ export const statusAutorizationArray = [
   { value: StatusAutorizationEmun.Detained, text: "Beca Retenida" },
 ]
 export const causeArray = [
-  { value: CauseEmun.BreakRules, text: "FALTAS AL REGLAMENTO AL NO COMENTAR UN ASPECTO TRASCENDENTAL" },
+  { value: CauseEmun.Breakrules, text: "FALTAS AL REGLAMENTO AL NO COMENTAR UN ASPECTO TRASCENDENTAL" },
   { value: CauseEmun.Extraordinary, text: "POR LLEVARSE A EXTRAORDINARIO" },
-  { value: CauseEmun.FaultsFi, text: "FALTAS A F.I." },
-  { value: CauseEmun.LowAverage, text: "BAJO PROMEDIO" },
+  { value: CauseEmun.Faults, text: "FALTAS A F.I." },
+  { value: CauseEmun.Lowaverage, text: "BAJO PROMEDIO" },
   { value: CauseEmun.Missing, text: "DESAPARECIÓ SIN AVISAR" },
-  { value: CauseEmun.NotConstancy, text: "NO ENTREGÓ CONSTANCIA" },
-  { value: CauseEmun.OriginalGrades, text: "NO ENTREGÓ CALIFICACIONES ORIGINALES" },
-  { value: CauseEmun.PersonalProblemsSchool, text: "DEJÓ LA ESCUELA POR PROBLEMAS PERSONALES" },
-  { value: CauseEmun.ProvisionalesGrades, text: "NO ENTREGÓ CALIFICACIONES PROVICIONALES" },
-  { value: CauseEmun.VocationalProblemsSchool, text: "DEJÓ LA ESCUELA POR FALTA DE ORIENTACIÓN VOCACIONAL" },
+  { value: CauseEmun.Notconstancy, text: "NO ENTREGÓ CONSTANCIA" },
+  { value: CauseEmun.Origrades, text: "NO ENTREGÓ CALIFICACIONES ORIGINALES" },
+  { value: CauseEmun.Personalschool, text: "DEJÓ LA ESCUELA POR PROBLEMAS PERSONALES" },
+  { value: CauseEmun.Provgrades, text: "NO ENTREGÓ CALIFICACIONES PROVICIONALES" },
+  { value: CauseEmun.Vocationalschool, text: "DEJÓ LA ESCUELA POR FALTA DE ORIENTACIÓN VOCACIONAL" },
   { value: CauseEmun.Other, text: "OTRO" },
 ]
+
+export const causeMap = new Map([
+  [CauseEmun.Breakrules, { value: CauseEmun.Breakrules, text: "FALTAS AL REGLAMENTO AL NO COMENTAR UN ASPECTO TRASCENDENTAL" }],
+  [CauseEmun.Extraordinary, { value: CauseEmun.Extraordinary, text: "POR LLEVARSE A EXTRAORDINARIO" }],
+  [CauseEmun.Faults, { value: CauseEmun.Faults, text: "FALTAS A F.I." }],
+  [CauseEmun.Lowaverage, { value: CauseEmun.Lowaverage, text: "BAJO PROMEDIO" }],
+  [CauseEmun.Missing, { value: CauseEmun.Missing, text: "DESAPARECIÓ SIN AVISAR" }],
+  [CauseEmun.Notconstancy, { value: CauseEmun.Notconstancy, text: "NO ENTREGÓ CONSTANCIA" }],
+  [CauseEmun.Origrades, { value: CauseEmun.Origrades, text: "NO ENTREGÓ CALIFICACIONES ORIGINALES" }],
+  [CauseEmun.Personalschool, { value: CauseEmun.Personalschool, text: "DEJÓ LA ESCUELA POR PROBLEMAS PERSONALES" }],
+  [CauseEmun.Provgrades, { value: CauseEmun.Provgrades, text: "NO ENTREGÓ CALIFICACIONES PROVICIONALES" }],
+  [CauseEmun.Vocationalschool, { value: CauseEmun.Vocationalschool, text: "DEJÓ LA ESCUELA POR FALTA DE ORIENTACIÓN VOCACIONAL" }],
+  [CauseEmun.Other, { value: CauseEmun.Other, text: "OTRO" }],
+])
 
 export const MonthsMap = new Map([
   [1, { value: 1, text: "ENERO" }],

@@ -2,7 +2,7 @@ import dayjs from "dayjs"
 import { defineStore, storeToRefs } from "pinia"
 import { computed, ref } from "vue"
 
-import { CampusEnum, CreateAutorizationInput, StatusAutorizationEmun } from "@/grapqhl"
+import { Autorization, CampusEnum, CreateAutorizationInput, StatusAutorizationEmun } from "@/grapqhl"
 import { useAuthStore } from "@/store/api/authStore"
 import { useAutorizationStore } from "@/store/api/autorizationStore"
 import { useCalendarStore } from "@/store/api/calendarStore"
@@ -28,8 +28,9 @@ export const useAutorizationPageStore = defineStore("autorizationPage", () => {
   const autorization = computed(() => [...autorizationMap.value.values()])
   const generations = computed(() => [...generationsMap.value.values()])
   const createDialog = ref(false)
+  const updateDialog = ref(false)
   const selectedUser = ref(0)
-
+  const editAutorization = ref<Autorization | undefined>()
   // const calendarRange = computed(() => {
   //   const referenceDate = dayjs(variables.value.date)
   //   const filteredEvents = calendars.value.filter((event) => {
@@ -57,6 +58,29 @@ export const useAutorizationPageStore = defineStore("autorizationPage", () => {
     selectedUser.value = id
   }
 
+  const openUpdate = async (userId: number, month: number, year: number) => {
+    updateDialog.value = true
+    const user = autorizationMap.value.get(userId)
+    console.log(1)
+    if (user) {
+      console.log(2)
+      if (!user.autorizationMonth) return
+      console.log(3)
+      const autorization = user.autorizationMonth.find((item) => {
+        const itemDate = dayjs(item.date)
+        return itemDate.month() + 1 === month && itemDate.year() === year
+      })
+      console.log(4)
+      if (autorization) {
+        console.log(5)
+        editAutorization.value = autorization
+      } else {
+        console.log(6)
+        editAutorization.value = undefined
+      }
+    }
+  }
+
   const onConsult = async (campus: CampusEnum, generation: number, date: string) => {
     variables.value = { campus, generation, date }
     try {
@@ -70,7 +94,7 @@ export const useAutorizationPageStore = defineStore("autorizationPage", () => {
     const findUser = autorizationMap.value.get(selectedUser.value)
     try {
       if (findUser) {
-        const input = { ...createAutorizationInput, userId: findUser.id }
+        const input = { ...createAutorizationInput, userId: findUser.id } as CreateAutorizationInput
         const res = await mutateCreateAutorization({ createAutorizationInput: input })
         if (res?.data?.createAutorization) {
           createDialog.value = false
@@ -82,11 +106,12 @@ export const useAutorizationPageStore = defineStore("autorizationPage", () => {
     }
   }
 
-  const fullAutorization = async (id: number) => {
+  const fullAutorization = async (id: number, month: number, year: number) => {
     const findUser = autorizationMap.value.get(id)
     try {
       if (findUser) {
-        const input = { userId: findUser.id, status: StatusAutorizationEmun.Active, percentage: 100 } as CreateAutorizationInput
+        const formatDate = `${year}/${month}/16`
+        const input = { userId: findUser.id, status: StatusAutorizationEmun.Active, percentage: 100, date: formatDate } as CreateAutorizationInput
         const res = await mutateCreateAutorization({ createAutorizationInput: input })
         if (res?.data?.createAutorization) {
           createDialog.value = false
@@ -108,7 +133,10 @@ export const useAutorizationPageStore = defineStore("autorizationPage", () => {
     loadCalendar,
     autorization,
     createDialog,
+    updateDialog,
+    editAutorization,
     onConsult,
+    openUpdate,
     openCreate,
     fullAutorization,
     onCreateAutorization,

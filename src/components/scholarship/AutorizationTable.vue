@@ -108,7 +108,15 @@
         <div style="width: 100%" v-if="!validateAutorization(item.autorizationMonth)">
           <v-tooltip location="bottom" text="Autorizar pago" v-if="item.active">
             <template v-slot:activator="{ props }">
-              <v-btn v-bind="props" variant="text" :color="item.absenceCount >= 2 ? 'grey' : 'green'" density="comfortable" icon="mdi-account-check" class="mr-2" @click="$emit('submit', item.id)">
+              <v-btn
+                v-bind="props"
+                variant="text"
+                :color="item.absenceCount >= 2 ? 'grey' : 'green'"
+                density="comfortable"
+                icon="mdi-account-check"
+                class="mr-2"
+                @click="$emit('submit', item.id, consult.month || 0, getYear[0].value)"
+              >
               </v-btn>
             </template>
           </v-tooltip>
@@ -128,7 +136,8 @@
           <!-- <v-icon color="green"> mdi-checkbox-blank-circle</v-icon> -->
           <v-tooltip location="bottom" text="Editar autorización">
             <template v-slot:activator="{ props }">
-              <v-btn v-bind="props" variant="text" color="warning" density="comfortable" icon="mdi-account-edit" class="mr-2"> </v-btn>
+              <v-btn v-bind="props" variant="text" color="warning" density="comfortable" icon="mdi-account-edit" class="mr-2" @click="$emit('edit', item.id, consult.month || 0, getYear[0].value)">
+              </v-btn>
             </template>
           </v-tooltip>
         </div>
@@ -176,13 +185,43 @@
           <p class="font-weight-medium px-4 py-2">HISTORIAL DE REFRENDO EN EL SEMESTRE {{ selectedSemester }}:</p>
 
           <div class="pb-5">
-            <v-stepper alt-labels class="custom-stepper" elevation="0">
-              <v-stepper-header v-for="(autorization, index) of item.autorizationMonth" :key="index">
-                <v-stepper-item :value="index + 1" icon="mdi-check" color="green">
-                  <template v-slot:title> {{ dayjs(autorization.date).format("DD/MM/YYYY") }} </template>
-                  <template v-slot:subtitle> Alert message </template>
-                </v-stepper-item>
-                <v-divider v-if="index < item.autorizationMonth.length - 1"></v-divider>
+            <v-stepper alt-labels elevation="0" :model-value="item.autorizationMonth.length">
+              <v-stepper-header>
+                <template v-for="(autorization, index) of item.autorizationMonth" :key="index">
+                  <v-stepper-item
+                    :value="index + 1"
+                    :icon="
+                      autorization.status === StatusAutorizationEmun.Active
+                        ? ' mdi-check'
+                        : autorization.status === StatusAutorizationEmun.Suspended
+                          ? 'mdi-account-alert'
+                          : autorization.status === StatusAutorizationEmun.Detained
+                            ? 'mdi-account-remove'
+                            : ''
+                    "
+                    :color="
+                      autorization.status === StatusAutorizationEmun.Active
+                        ? 'green'
+                        : autorization.status === StatusAutorizationEmun.Suspended
+                          ? 'warning'
+                          : autorization.status === StatusAutorizationEmun.Detained
+                            ? 'danger'
+                            : ''
+                    "
+                  >
+                    <template v-slot:title>
+                      <span class="font-weight-medium"> {{ getAutorizationMounth(autorization.date) }} </span>
+                    </template>
+                    <template v-slot:subtitle>
+                      <span class="font-weight-medium py-1" style="font-size: 15px">{{ statusAutorizationMap.get(autorization.status)?.text }}</span>
+                      <p class="font-weight-medium py-1" style="font-size: 15px">{{ autorization.percentage }}%</p>
+                      <p class="font-weight-medium py-1" style="font-size: 15px" v-if="autorization.cause">
+                        {{ autorization.cause === CauseEmun.Other ? autorization.otherCause : causeMap.get(autorization.cause)?.text }}
+                      </p>
+                    </template>
+                  </v-stepper-item>
+                  <v-divider v-if="index < item.autorizationMonth.length - 1"></v-divider>
+                </template>
               </v-stepper-header>
             </v-stepper>
           </div>
@@ -193,13 +232,12 @@
   </v-data-table>
 </template>
 <script setup lang="ts">
-import VueDatePicker from "@vuepic/vue-datepicker"
 import dayjs from "dayjs"
 import { computed, onBeforeMount, PropType, ref, watch } from "vue"
 
-import { Attendance, Autorization, Calendar, CampusEnum, Constancy, Generation, User } from "@/grapqhl"
+import { Attendance, Autorization, Calendar, CampusEnum, CauseEmun, Constancy, Generation, StatusAutorizationEmun, User } from "@/grapqhl"
 
-import { CampusOption, MonthsMap } from "../../../constants"
+import { CampusOption, causeMap, MonthsMap, statusAutorizationMap } from "../../../constants"
 import "@vuepic/vue-datepicker/dist/main.css"
 
 const props = defineProps({
@@ -212,10 +250,10 @@ const props = defineProps({
 })
 
 const emit = defineEmits<{
-  submit: [id: number]
+  submit: [id: number, month: number, year: number]
   create: [id: number]
   consult: [campus: CampusEnum, generation: number, date: string]
-  edit: [id: number]
+  edit: [id: number, month: number, year: number]
   remove: [id: number]
   activate: [id: number]
   deactivate: [id: number]
@@ -226,10 +264,12 @@ const search = ref("")
 const campusData = ref<CampusEnum | null>(null)
 const generationData = ref<number | null>(null)
 const selectedSemester = ref(null)
+
 const consult = ref({
   month: null,
   year: new Date().getFullYear(),
 })
+
 const semesters = [
   { value: 1, text: "Semestre 1" },
   { value: 2, text: "Semestre 2" },
@@ -268,9 +308,10 @@ const months = computed(() => {
 
 const getYear = computed(() => {
   const currentDate = dayjs()
-  const cutoffDate = dayjs(`${currentDate.year()}-08-01`)
+  const cutoffDate = dayjs(`${currentDate.year()}-07-01`)
   const year = currentDate.isBefore(cutoffDate) ? currentDate.year() - 1 : currentDate.year()
-  return [{ value: year, text: `${year} - ${year + 1}` }]
+  const valueYear = selectedSemester.value === 1 ? year : year + 1
+  return [{ value: valueYear, text: `${year} - ${year + 1}` }]
 })
 
 const headers = computed(
@@ -538,7 +579,6 @@ const filterAutorization = (dates: Autorization[]) => {
     const itemDate = dayjs(item.date)
     return (itemDate.isAfter(startDate) || itemDate.isSame(startDate, "day")) && (itemDate.isBefore(endDate) || itemDate.isSame(endDate, "day"))
   })
-  console.log(filteredDates)
 
   return filteredDates
 }
@@ -549,6 +589,12 @@ const validateAutorization = (value: Autorization[]): boolean => {
     return itemMonth === consult.value.month
   })
   return exists
+}
+
+const getAutorizationMounth = (value: string) => {
+  const format = dayjs(value)
+  const result = format.month() + 1
+  return MonthsMap.get(result)?.text
 }
 </script>
 
